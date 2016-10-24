@@ -35,13 +35,25 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
-    <Folder Include="Service\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Message\AudioServiceMessageParser.cs" />
+    <Compile Include="Message\AudioServiceMessage\NextMessage.cs" />
+    <Compile Include="Message\AudioServiceMessage\PauseMessage.cs" />
+    <Compile Include="Message\AudioServiceMessage\PlayMessage.cs" />
+    <Compile Include="Message\AudioServiceMessage\PrevMessage.cs" />
+    <Compile Include="Message\AudioServiceMessage\SeekMessage.cs" />
+    <Compile Include="Message\AudioServiceMessage\ShortStatusInfoMessage.cs" />
+    <Compile Include="Message\AudioServiceMessage\StatusInfoMessage.cs" />
+    <Compile Include="Message\AudioServiceMessage\StatusMessage.cs" />
+    <Compile Include="Message\AudioServiceMessage\StopMessage.cs" />
     <Compile Include="Message\IMessage.cs" />
     <Compile Include="Model\Error.cs" />
     <Compile Include="Model\ErrorCode.cs" />
+    <Compile Include="Model\PlayerState.cs" />
+    <Compile Include="Model\RepeatMode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\IAudioPlayerServiceClient.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
