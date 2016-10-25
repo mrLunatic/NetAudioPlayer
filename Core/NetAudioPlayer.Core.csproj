@@ -37,6 +37,8 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\ITcpClient.cs" />
+    <Compile Include="Components\ITcpServer.cs" />
     <Compile Include="Message\AudioServiceMessageParser.cs" />
     <Compile Include="Message\AudioServiceMessage\NextMessage.cs" />
     <Compile Include="Message\AudioServiceMessage\PauseMessage.cs" />
