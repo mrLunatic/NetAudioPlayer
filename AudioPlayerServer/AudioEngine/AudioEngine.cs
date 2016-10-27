@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
-using AudioPlayerServer.Messages;
 using NAudio.Wave;
+using NetAudioPlayer.Core.Model;
 
-namespace AudioPlayerServer.AudioEngine
+namespace NetAudioPlayer.AudioPlayerServer.AudioEngine
 {
     class AudioEngine : IAudioEngine, IDisposable
     {            
@@ -35,10 +31,10 @@ namespace AudioPlayerServer.AudioEngine
 
         public AudioEngine()
         {
-            _waveOut.PlaybackStopped += (sender, args) =>
+            this._waveOut.PlaybackStopped += (sender, args) =>
             {
-                _stream?.Dispose();
-                _stream = null;
+                this._stream?.Dispose();
+                this._stream = null;
 
                 State = PlayerState.Stop;
                 ItemDuration = TimeSpan.Zero;
@@ -47,7 +43,7 @@ namespace AudioPlayerServer.AudioEngine
 
                 OnStateChanged();
             };
-            _timer.Elapsed += (sender, args) =>
+            this._timer.Elapsed += (sender, args) =>
             {
                 OnStateChanged();
             };
@@ -58,10 +54,10 @@ namespace AudioPlayerServer.AudioEngine
         {
             if (State != PlayerState.Pause) return;
 
-            _waveOut.Resume();
+            this._waveOut.Resume();
 
-            if (!_timer.Enabled)
-                _timer.Start();
+            if (!this._timer.Enabled)
+                this._timer.Start();
 
             State = PlayerState.Play;
             OnStateChanged();
@@ -71,16 +67,16 @@ namespace AudioPlayerServer.AudioEngine
 
         public void Play(string fileName)
         {
-            _stream?.Dispose();            
+            this._stream?.Dispose();            
 
-            _stream = new MediaFoundationReader(fileName);
+            this._stream = new MediaFoundationReader(fileName);
 
-            _waveOut.Init(_stream);
+            this._waveOut.Init(this._stream);
 
-            _waveOut.Play();
+            this._waveOut.Play();
 
-            if (!_timer.Enabled)
-                _timer.Start();
+            if (!this._timer.Enabled)
+                this._timer.Start();
 
 
         }
@@ -91,10 +87,10 @@ namespace AudioPlayerServer.AudioEngine
 
             OnStateChanged();
 
-            _waveOut.Pause();
+            this._waveOut.Pause();
 
-            if (_timer.Enabled)
-                _timer.Stop();
+            if (this._timer.Enabled)
+                this._timer.Stop();
         }
 
         public void Stop()
@@ -114,10 +110,10 @@ namespace AudioPlayerServer.AudioEngine
 
         public void Dispose()
         {
-            if (_disposed) return;
+            if (this._disposed) return;
 
-            _waveOut?.Dispose();
-            _stream?.Dispose();
+            this._waveOut?.Dispose();
+            this._stream?.Dispose();
         }
     }
 }
