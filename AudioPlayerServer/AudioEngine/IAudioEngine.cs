@@ -35,6 +35,16 @@ namespace NetAudioPlayer.AudioPlayerServer.AudioEngine
         IEnumerable<string> Items { get; }
 
         /// <summary>
+        /// Воспроизведение в случайном порядке
+        /// </summary>
+        bool Shuffle { get; set; }
+
+        /// <summary>
+        /// Режим повторения
+        /// </summary>
+        RepeatMode Repeat { get; set; }
+
+        /// <summary>
         /// Событие изменения состояния плеера
         /// </summary>
         event EventHandler StateChanged;
