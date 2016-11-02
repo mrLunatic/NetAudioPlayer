@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetAudioPlayer.Core", "Core
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetAudioPlayer.AudioPlayerServer", "AudioPlayerServer\NetAudioPlayer.AudioPlayerServer.csproj", "{ED41C91E-C89D-450A-B325-EE9C826D030B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{B53911E4-6D5C-4398-B0CF-BCCD5D9D9C1A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AudioPlayerServerTests", "Tests\AudioPlayerServerTests\AudioPlayerServerTests.csproj", "{73E3022B-4FAE-404D-BFD9-8B686B386940}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,8 +25,15 @@ Global
 		{ED41C91E-C89D-450A-B325-EE9C826D030B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED41C91E-C89D-450A-B325-EE9C826D030B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED41C91E-C89D-450A-B325-EE9C826D030B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73E3022B-4FAE-404D-BFD9-8B686B386940}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73E3022B-4FAE-404D-BFD9-8B686B386940}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73E3022B-4FAE-404D-BFD9-8B686B386940}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73E3022B-4FAE-404D-BFD9-8B686B386940}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{73E3022B-4FAE-404D-BFD9-8B686B386940} = {B53911E4-6D5C-4398-B0CF-BCCD5D9D9C1A}
 	EndGlobalSection
 EndGlobal

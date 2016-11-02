@@ -52,11 +52,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AudioEngine\AudioEngine.cs" />
-    <Compile Include="AudioEngine\IAudioEngine.cs" />
-    <Compile Include="PlayerServer.cs" />
+    <Compile Include="Model\Playlist.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Server\TcpServer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
