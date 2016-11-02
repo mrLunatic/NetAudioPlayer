@@ -52,8 +52,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\State\IdleState.cs" />
+    <Compile Include="Model\State\PauseState.cs" />
+    <Compile Include="Model\State\StateBase.cs" />
     <Compile Include="Model\Playlist.cs" />
+    <Compile Include="Model\State\PlayState.cs" />
+    <Compile Include="Model\State\StopState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\PlayerService.cs" />
+    <Compile Include="Service\Strings.cs" />
+    <Compile Include="Service\UniversalItemLoader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -1,27 +1,29 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NetAudioPlayer.AudioPlayerServer.Model;
+using NetAudioPlayer.Core.Model;
 
 namespace AudioPlayerServerTests
 {
-    class ItemLoader : IPlayListItemLoader
-    {
-        public PlayListItem LoadItem(string item)
-        {
-            return new PlayListItem(item, null);
-        }
-    }
-
     [TestClass]
-    public class UnitTest1
+    public class PlayListTest
     {
-        private readonly string[] _items = new[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", };
+        class ItemLoader : IPlayListItemLoader
+        {
+            public PlayListItem LoadItem(string item)
+            {
+                return new PlayListItem(item, null);
+            }
+        }
+
+        private readonly string[] _items = new[] { "1", "2", "3", "4" };
 
         [TestMethod]
-        public void PlayListTest()
-        {            
+        public void Base()
+        {
             var playList = new Playlist(new ItemLoader());
 
             playList.Init(_items);
@@ -32,20 +34,101 @@ namespace AudioPlayerServerTests
 
             playList.Reset();
 
-            Assert.IsNull(playList.Item, @"После сброса Item не должен быть указан!");
+            Assert.IsNull(playList.Item, @"После сброса Item не должен быть указан!");       
+        }
+
+        [TestMethod]
+        public void NoRepeatMode()
+        {
+            var playList = new Playlist(new ItemLoader());
 
             playList.Init(_items);
 
             playList.Play(_items[0]);
 
-            foreach (string item in _items)
+            foreach (var item in _items)
             {
                 Assert.IsNotNull(playList.Item, "Не указан воспроизводимый трек");
                 Assert.AreEqual(item, playList.Item.Name, @"Воспроизводится неправильный трек");
                 playList.Next();
             }
 
-            Assert.IsNull(playList.Item, "Плеер не закончил воспроизведение");
+            Assert.IsNull(playList.Item, "Плейлист не закончил воспроизведение");
+
+            playList.Shuffle = true;
+            playList.Init(_items);
+
+            var played = new List<string>();
+
+            for (var i = 0; i < _items.Length; i++)
+            {
+                playList.Next();
+                Assert.IsFalse(played.Contains(playList.Item.Name), "Повторение элемента в режиме NoRepeat");
+                played.Add(playList.Item.Name);
+            }
+
+            played.Reverse();
+
+            for (var i = 0; i < _items.Length; i++)
+            {
+                Assert.AreEqual(played[i], playList.Item.Name, "Ошибка перехода к предыдущему треку");
+                playList.Prev();
+            }
+
         }
+
+        [TestMethod]
+        public void RepeatOneMode()
+        {
+            var playList = new Playlist(new ItemLoader())
+            {
+                RepeatMode = RepeatMode.One
+            };
+
+            playList.Init(_items);
+
+            playList.Play(_items[0]);
+
+            for (var i  = 0; i < _items.Length; i++)
+            {                
+                Assert.IsNotNull(playList.Item, "Не указан воспроизводимый трек");
+                Assert.AreEqual(_items[0], playList.Item.Name, @"Воспроизводится неправильный трек");
+                playList.Next();
+            }
+
+            playList.Shuffle = true;
+
+            for (var i = 0; i < _items.Length; i++)
+            {
+                Assert.IsNotNull(playList.Item, "Не указан воспроизводимый трек");
+                Assert.AreEqual(_items[0], playList.Item.Name, @"Воспроизводится неправильный трек");
+                playList.Next();
+            }
+        }
+
+        [TestMethod]
+        public void RepeatAllMode()
+        {
+            var playList = new Playlist(new ItemLoader())
+            {
+                RepeatMode = RepeatMode.All
+            };
+
+            playList.Init(_items);
+
+            playList.Play(_items[0]);
+
+            for (var i = 0; i < 2; i++)
+            {
+                foreach (var item in _items)
+                {
+                    Assert.IsNotNull(playList.Item, @"Не указан воспроизводимый трек");
+                    Assert.AreEqual(item, playList.Item.Name, @"Воспроизводится неправильный трек");
+                    playList.Next();
+                }
+            }
+
+        }
+
     }
 }

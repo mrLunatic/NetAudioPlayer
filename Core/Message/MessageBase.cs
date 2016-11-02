@@ -1,31 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NetAudioPlayer.Core.Model;
+using Newtonsoft.Json;
 
 namespace NetAudioPlayer.Core.Message
 {
     /// <summary>
-    /// Общее описание сообщения
+    /// Базовый класс для сообщений
     /// </summary>
-    public interface IMessage
+    public abstract class MessageBase : IMessage
     {
+        #region IMessage
+
         /// <summary>
         /// Тип сообщения
         /// </summary>
-        string Type { get; }
+        [JsonProperty(@"type")]
+        public string Type => GetType().Name;
 
         /// <summary>
         /// Локаль клиента
         /// </summary>
-        string Lang { get; set; }
+        [JsonProperty(@"lang")]
+        public string Lang { get; set; }
 
         /// <summary>
         /// Ошибка обработки сообщения
         /// </summary>
-        Error Error { get; set; }
+        [JsonProperty(@"error")]
+        public Error Error { get; set; }
+
+        #endregion
     }
 }

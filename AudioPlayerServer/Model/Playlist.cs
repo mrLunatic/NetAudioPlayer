@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,11 +12,13 @@ using NetAudioPlayer.Core.Model;
 
 namespace NetAudioPlayer.AudioPlayerServer.Model
 {
+    
     public interface IPlayListItemLoader
     {
         PlayListItem LoadItem(string item);
     }
 
+    [DebuggerDisplay("{Name}. Played: {IsPlayed}")]
     public class PlayListItem
     {
         public string Name { get; }
@@ -33,6 +36,7 @@ namespace NetAudioPlayer.AudioPlayerServer.Model
         }
     }
 
+    [DebuggerDisplay("{_items.Count} items. Current: {Item.Name}")]
     public class Playlist
     {
         private readonly IList<PlayListItem> _items = new List<PlayListItem>();
@@ -95,80 +99,98 @@ namespace NetAudioPlayer.AudioPlayerServer.Model
 
         public void Reset()
         {
-            this._items.Clear();
-            this.Item = null;
+            Item = null;
+
+            foreach (var playListItem in _items)
+            {
+                playListItem.WaveStream?.Dispose();
+            }
+
+            _items.Clear();            
+            _historyCount = 0;
         }
 
-        public void Play(string item)
+        public bool Play()
         {
-            var playListItem = this._items.FirstOrDefault(p => p.Name == item);
+            return Next();
+        }
+
+        public bool Play(string item)
+        {
+            var playListItem = _items.FirstOrDefault(p => p.Name == item);
 
             if (playListItem == null)
             {
                 Init(new [] {item} );
 
-                playListItem = this._items[0];
+                playListItem = _items[0];
             }
 
-            this.Item = playListItem;
+            Item = playListItem;
+
+            return Item != null;
         }
 
-        public void Next()
+        public bool Next()
         {
-            var avaliableItems = this._items.Where(p => !p.IsPlayed).ToArray();
+            var avaliableItems = _items.Where(p => !p.IsPlayed).ToArray();
 
             if (RepeatMode == RepeatMode.NoRepeat && !avaliableItems.Any())
             {
-                this.Item = null;
-                return;
+                Item = null;
+                return false;
             }
-            if (RepeatMode == RepeatMode.One && this.Item != null)
+            if (RepeatMode == RepeatMode.One && Item != null)
             {
                 OnItemChanged(Item);
-                return;
+                return true;
             }
-            if (this.RepeatMode == RepeatMode.All && avaliableItems.Length == 0)
+            if (RepeatMode == RepeatMode.All && avaliableItems.Length == 0)
             {
-                foreach (PlayListItem playListItem in this._items)
+                foreach (var playListItem in _items)
                 {
                     _historyCount = 0;
                     playListItem.HistoryIndex = null;
                 }
 
-                avaliableItems = this._items.ToArray();
+                avaliableItems = _items.ToArray();
             }
 
             if (avaliableItems.Length == 0)
             {
-                return;
+                return false;
             }
 
-            var index = this.Shuffle ? this._random.Next(avaliableItems.Length) : 0;
+            var index = Shuffle ? _random.Next(avaliableItems.Length) : 0;
 
-            this.Item = avaliableItems[index];
-       
+            Item = avaliableItems[index];
+
+            return true;
         }
 
-        public void Prev()
+        public bool Prev()
         {
-            var played = this._items.Where(p => p.IsPlayed).ToArray();
+            var played = _items.Where(p => p.IsPlayed).ToArray();
 
-            if (played.Length == 0 && this.Item == null)
+            if (played.Length == 0 && Item == null)
             {
-                return;
+                return false;
             }
 
-            this.Item.HistoryIndex = null;
+            Item.HistoryIndex = null;
 
-            var item = played.FirstOrDefault(p => p.HistoryIndex == this._historyCount);
-
-            this._historyCount--;
+            _historyCount--;
+            var item = played.FirstOrDefault(p => p.HistoryIndex == _historyCount);
 
             if (item != null)
             {
-                this.Item = item;
+                _item = item;
+
+                OnItemChanged(_item);
+                return true;
             }
 
+            return false;
         }
 
         protected virtual void OnItemChanged(PlayListItem e)

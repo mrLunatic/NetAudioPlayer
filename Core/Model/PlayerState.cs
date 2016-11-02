@@ -22,6 +22,10 @@ namespace NetAudioPlayer.Core.Model
         /// <summary>
         /// Плеер остановлен
         /// </summary>
-        Stop
+        Stop,
+        /// <summary>
+        /// Спящий режим
+        /// </summary>
+        Idle
     }
 }
