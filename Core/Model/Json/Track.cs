@@ -20,7 +20,7 @@ namespace NetAudioPlayer.Core.Model.Json
         /// <summary>
         /// Длительность композиции
         /// </summary>
-        public TimeSpan Duration { get; set; }
+        public double Duration { get; set; }
 
         /// <summary>
         /// Идентификатор исполнителя
@@ -40,6 +40,11 @@ namespace NetAudioPlayer.Core.Model.Json
         /// <summary>
         /// Название альбома
         /// </summary>
-        public string AlbumName { get; set; }        
+        public string AlbumName { get; set; }      
+        
+        /// <summary>
+        /// Путь к медиафайлу
+        /// </summary>
+        public string Uri { get; set; }  
     }
 }

@@ -15,7 +15,7 @@ namespace NetAudioPlayer.Core.Message
         /// <summary>
         /// Позиция, на которую необходимо перемотать
         /// </summary>
-        [JsonProperty(@"position"), JsonConverter(typeof(TimeSpanConverter))]
-        public TimeSpan Position { get; set; }
+        [JsonProperty(@"position")]
+        public double Position { get; set; }
     }
 }

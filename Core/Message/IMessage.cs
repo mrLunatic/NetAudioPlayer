@@ -14,6 +14,11 @@ namespace NetAudioPlayer.Core.Message
     public interface IMessage
     {
         /// <summary>
+        /// Идентификатор сообщения
+        /// </summary>
+        string Id { get; }
+
+        /// <summary>
         /// Тип сообщения
         /// </summary>
         string Type { get; }

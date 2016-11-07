@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.Remoting;
 using System.Timers;
 using NetAudioPlayer.Core.Message;
 using NetAudioPlayer.Core.Message.AudioServiceMessage;
@@ -9,100 +8,195 @@ namespace NetAudioPlayer.AudioPlayerServer.Model.State
 {
     internal sealed class PlayState : StateBase
     {
-        private readonly Timer _timer = new Timer(250);
+        protected override PlayerState State { get; } = PlayerState.Play;
 
-        protected override IMessage HandleNextMessage(NextMessage message)
+        private readonly Timer _timer = new Timer(1000);
+
+
+        public PlayState()
         {
-            WaveOut.Stop();
-            _timer.Stop();
+            _timer.Elapsed += TimerOnElapsed;
+            AudioEngine.PlaybackStopped += AudioEngineOnPlaybackStopped;
+        }
 
+        private void AudioEngineOnPlaybackStopped(object sender, EventArgs eventArgs)
+        {
             Playlist.Next();
 
             if (Playlist.Item != null)
             {
-                WaveOut.Init(Playlist.Item.WaveStream);
-                WaveOut.Play();
-                _timer.Start();
+                AudioEngine.Play(Playlist.Item);
             }
-             
-            return new ResponseMessage();
+            else
+            {
+                AudioEngine.Stop();
+                _timer.Stop();
+
+                SwitchState(States.Stop);
+            }
+        }
+
+        private void TimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
+        {
+            SendShortStatusMessage();
+        }
+
+
+        protected override IMessage HandleNextMessage(NextMessage message)
+        {
+            try
+            {
+                _timer.Stop();
+
+                Playlist.Next();
+
+                if (Playlist.Item != null)
+                {
+                    AudioEngine.Play(Playlist.Item);
+
+                    SendStatusMessage();
+
+                    _timer.Start();
+                }
+                else
+                {
+                    SwitchState(States.Stop);
+                }
+
+                return null;
+            }
+            catch (Exception e)
+            {
+                return new ResponseMessage(message, e);
+            }   
         }
 
         protected override IMessage HandleSeekMessage(SeekMessage message)
         {
-            if (message.Position > Playlist.Item.WaveStream.TotalTime)
+            try
             {
-                return new ResponseMessage(ErrorCode.Unhandled);
+                AudioEngine.Seek(TimeSpan.FromSeconds(message.Position));
+
+                return null;
             }
-
-            Playlist.Item.WaveStream.CurrentTime = message.Position;
-
-            return new ResponseMessage();
+            catch (Exception e)
+            {
+                return new ResponseMessage(message, e);
+            }
         }
 
         protected override IMessage HandleStatusMessage(StatusMessage message)
         {
-            if (message.Repeat.HasValue)
+            try
             {
-                Playlist.RepeatMode = message.Repeat.Value;
-            }
-
-            if (message.Shuffle.HasValue)
-            {
-                Playlist.Shuffle = message.Shuffle.Value;
-            }
-
-            if (message.Volume.HasValue)
-            {
-                if (message.Volume.Value > 1)
+                if (message.Repeat.HasValue)
                 {
-                    message.Volume = 1;
-                }
-                else if (message.Volume.Value < 0)
-                {
-                    message.Volume = 0;
+                    Playlist.RepeatMode = message.Repeat.Value;
                 }
 
-                WaveOut.Volume = (float) message.Volume.Value;
-            }
+                if (message.Shuffle.HasValue)
+                {
+                    Playlist.Shuffle = message.Shuffle.Value;
+                }
 
-            return new ResponseMessage();
+                if (message.Volume.HasValue)
+                {
+                    AudioEngine.Volume = (float) message.Volume.Value;
+                }
+
+                SendStatusMessage();
+
+                return null;
+            }
+            catch (Exception e)
+            {
+                return new ResponseMessage(message, e);
+            }
         }
 
         protected override IMessage HandleStopMessage(StopMessage message)
         {
-            WaveOut.Stop();
-            _timer.Stop();
+            try
+            {
+                _timer.Stop();
 
-            SwitchState<StopState>();
+                SwitchState(States.Stop);
 
-            return new ResponseMessage();
+                return null;
+            }
+            catch (Exception e)
+            {
+                return new ResponseMessage(message, e);
+            }
         }
 
         protected override IMessage HandlePauseMessage(PauseMessage message)
         {
-            WaveOut.Pause();
-            _timer.Stop();
+            try
+            {
+                _timer.Stop();
 
-            SwitchState<PauseState>();
+                SwitchState(States.Pause);
 
-            return new ResponseMessage();
+                return null;
+            }
+            catch (Exception e)
+            {
+                return new ResponseMessage(message, e);
+            }
         }
 
         protected override IMessage HandlePlayMessage(PlayMessage message)
         {
-            return base.HandlePlayMessage(message);
+            try
+            {
+                _timer.Stop();
+
+                Playlist.Init(message.Items);
+                Playlist.Play(message.Item);
+                AudioEngine.Play(Playlist.Item);
+
+                _timer.Start();
+
+                SendStatusMessage();
+
+                return null;
+            }
+            catch (Exception e)
+            {
+                return new ResponseMessage(message, e);
+            }
         }
 
         protected override IMessage HandlePrevMessage(PrevMessage message)
         {
-            return base.HandlePrevMessage(message);
+            try
+            {
+                _timer.Stop();
 
-        }
+                if (AudioEngine.Position > TimeSpan.FromSeconds(5))
+                {
+                    Playlist.Prev();
+                }
 
-        protected override IMessage HandleStatusInfoMessage(StatusInfoMessage message)
-        {
-            return base.HandleStatusInfoMessage(message);
+                if (Playlist.Item != null)
+                {
+                    AudioEngine.Play(Playlist.Item);
+
+                    SendStatusMessage();
+
+                    _timer.Start();
+                }
+                else
+                {
+                    SwitchState(States.Stop);
+                }
+                return null;
+            }
+            catch (Exception e)
+            {
+                return new ResponseMessage(message, e);
+            }
         }
     }
 }

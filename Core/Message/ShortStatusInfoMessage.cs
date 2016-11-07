@@ -1,6 +1,7 @@
 ﻿using System;
 using NetAudioPlayer.Core.Attribute;
 using NetAudioPlayer.Core.Converters;
+using NetAudioPlayer.Core.Model.Json;
 using Newtonsoft.Json;
 
 namespace NetAudioPlayer.Core.Message
@@ -12,21 +13,15 @@ namespace NetAudioPlayer.Core.Message
     public class ShortStatusInfoMessage  : MessageBase
     {
         /// <summary>
-        /// Воспроизводимый элемент
+        /// Идентификатор текущего трека
         /// </summary>
-        [JsonProperty(@"item")]
-        public string Item { get; set; }
-
-        /// <summary>
-        /// Длительность текущего элемента
-        /// </summary>
-        [JsonProperty(@"itemDuration"), JsonConverter(typeof(TimeSpanConverter))]
-        public TimeSpan ItemDuration { get; set; }
+        [JsonProperty(@"trackId")]
+        public int TrackId { get; set; }
 
         /// <summary>
         /// Текущая позиция
         /// </summary>
-        [JsonProperty(@"currentPosition"), JsonConverter(typeof(TimeSpanConverter))]
-        public TimeSpan CurrentPosition { get; set; }
+        [JsonProperty(@"currentPosition")]
+        public double CurrentPosition { get; set; }
     }
 }

@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 
 namespace NetAudioPlayer.AudioPlayerServer.Service
 {
-
-
     public class Strings
     {
 

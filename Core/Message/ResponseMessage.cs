@@ -1,4 +1,5 @@
-﻿using NetAudioPlayer.Core.Attribute;
+﻿using System;
+using NetAudioPlayer.Core.Attribute;
 using NetAudioPlayer.Core.Model;
 using Newtonsoft.Json;
 
@@ -10,14 +11,25 @@ namespace NetAudioPlayer.Core.Message
     [Message]
     public class ResponseMessage : MessageBase
     {
-        public ResponseMessage(Error error = null)
+
+        public ResponseMessage()
+        {
+            
+        }
+
+        public ResponseMessage(IMessage request, Error error = null) : base(request.Id)
         {
             Error = error;
         }
 
-        public ResponseMessage(ErrorCode errorCode, string message = null)
+        public ResponseMessage(IMessage request, ErrorCode errorCode, string message = null) : base(request.Id)
         {
             Error = new Error(errorCode, message);
-        }       
+        }
+
+        public ResponseMessage(IMessage request, Exception e) : base(request.Id)
+        {
+            Error = new Error(ErrorCode.Unspecified, $@"{e.GetType().Name}: {e.Message}");
+        }
     }
 }

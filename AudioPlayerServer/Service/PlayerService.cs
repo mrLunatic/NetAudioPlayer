@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.AccessControl;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net;
 using NAudio.Wave;
+using NetAudioPlayer.AudioPlayerServer.Components;
 using NetAudioPlayer.AudioPlayerServer.Model;
 using NetAudioPlayer.AudioPlayerServer.Model.State;
 using NetAudioPlayer.Core.Message;
@@ -15,58 +12,66 @@ namespace NetAudioPlayer.AudioPlayerServer.Service
 {
     public sealed class PlayerService
     {
-        internal UniversalItemLoader Loader { get; } = new UniversalItemLoader();
+        private StateBase _state;
 
-        internal  SimpleTcpServer SimpleTcpServer { get; } = new SimpleTcpServer();
+        internal ICommunicationServer Server => ServiceLocator.Current.GetInstance<ICommunicationServer>();
 
-        internal Playlist Playlist { get; set; }
+        internal IItemLoader ItemLoader => ServiceLocator.Current.GetInstance<IItemLoader>();
 
-        internal WaveOut WaveOut { get; set; }
+        internal IAudioEngine AudioEngine => ServiceLocator.Current.GetInstance<IAudioEngine>();
 
+        internal IPlaylist Playlist => ServiceLocator.Current.GetInstance<IPlaylist>();
 
-        internal StateBase State { get; private set; }
-
-        internal IMessage SwitchState<T>(IMessage message = null) where T : StateBase
+        /// <summary>
+        /// Текущее состояние
+        /// </summary>
+        internal StateBase State
         {
-            var state = Activator.CreateInstance<T>();
-
-            state.Init(this, State);
-
-            State = state;
-
-            if (message != null)
+            get { return _state; }
+            private set
             {
-                return State.HandleMessage(message);
+                if (_state != null)
+                {
+                    _state.SwitchRequest -= StateOnSwitchRequest;
+                }
+
+                _state = value;
+
+                if (_state != null)
+                {
+                    _state.SwitchRequest += StateOnSwitchRequest;
+                }
             }
-
-            return null;
         }
-
 
 
         public PlayerService()
         {
-            SimpleTcpServer.DataReceived += SimpleTcpServerOnDataReceived;
+            Server.RequestRecieved += SimpleTcpServerOnRequestRecieved;
+
+            State = States.Idle;
         }
 
-        private void SimpleTcpServerOnDataReceived(object sender, Message message)
+        public void Start(string host, string service)
         {
-            if (string.IsNullOrEmpty(message.MessageString))
-            {
-                return;
-            }
-
-            var msg = MessageParser.Parse(message.MessageString);
-
-            var response = msg != null 
-                ? State.HandleMessage(msg) 
-                : new ResponseMessage(
-                    ErrorCode.UnknownMessageType,
-                    Strings.GetString(@"Error_UnknownMessageType"));
-
-            message.Reply(MessageParser.Serialize(response));
+            Server.Start(IPAddress.Parse(host), service);
         }
 
-        
+        public void Stop()
+        {
+            Server.Stop();
+        }
+
+        private void SimpleTcpServerOnRequestRecieved(object sender, RequestRecievedEventArgs args)
+        {
+            args.Response = State.HandleMessage(args.Request);
+        }
+
+        private void StateOnSwitchRequest(object sender, StateBase state)
+        {
+            State = state;
+        }
+
+
     }
 }

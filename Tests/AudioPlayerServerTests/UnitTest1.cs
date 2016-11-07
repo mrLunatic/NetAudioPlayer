@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NetAudioPlayer.AudioPlayerServer.Components;
 using NetAudioPlayer.AudioPlayerServer.Model;
 using NetAudioPlayer.Core.Model;
 
@@ -11,12 +12,30 @@ namespace AudioPlayerServerTests
     [TestClass]
     public class PlayListTest
     {
-        class ItemLoader : IPlayListItemLoader
+        class ItemLoader : IItemLoader
         {
-            public PlayListItem LoadItem(string item)
+            public PlaylistItem LoadItem(string item)
             {
-                return new PlayListItem(item, null);
+                return new PlaylistItem(item, null);
             }
+
+            /// <summary>
+            /// Удаляет из памяти все предыдущие компоненты
+            /// </summary>
+            public void Reset()
+            {
+            }
+
+            #region Implementation of IDisposable
+
+            /// <summary>
+            /// Выполняет определяемые приложением задачи, связанные с высвобождением или сбросом неуправляемых ресурсов.
+            /// </summary>
+            public void Dispose()
+            {
+            }
+
+            #endregion
         }
 
         private readonly string[] _items = new[] { "1", "2", "3", "4" };

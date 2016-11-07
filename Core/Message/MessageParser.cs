@@ -25,7 +25,7 @@ namespace NetAudioPlayer.Core.Message
 
                 if (attribute != null)
                 {      
-                    MesageTypes.Add(typeInfo.Name, typeInfo.BaseType);
+                    MesageTypes.Add(typeInfo.Name, typeInfo.AsType());
                 }
             }
         }  
@@ -34,7 +34,7 @@ namespace NetAudioPlayer.Core.Message
         {
             if (string.IsNullOrEmpty(message)) return null;
 
-            var msg = JsonConvert.DeserializeObject<IMessage>(message);
+            IMessage msg = JsonConvert.DeserializeObject<MessageBase>(message);
 
             var type = MesageTypes[msg.Type];
 
@@ -50,7 +50,7 @@ namespace NetAudioPlayer.Core.Message
         {
             if (message != null)
             {
-                return JsonConvert.SerializeObject(message);
+                return JsonConvert.SerializeObject(message, Formatting.Indented);
             }
             else
             {

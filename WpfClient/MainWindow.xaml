@@ -1,0 +1,40 @@
+﻿<Window x:Class="WpfClient.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfClient"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto" MinHeight="128"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+	    <Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="75"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+		    <StackPanel>
+			    <Button x:Name="GetStatusButton" Content="Get Status Info" />
+				<Button x:Name="PlayButton" Content="Play"></Button>
+				
+		    </StackPanel>
+			
+			<TabControl Grid.Column="1">
+				<TabItem Header="Recieved">
+					<TextBox x:Name="RecievedBox"/>
+				</TabItem>
+			</TabControl>
+			
+		</Grid>
+        				   
+		<TextBox Grid.Row="1" x:Name="LogBox"/>
+		
+		<Slider Grid.Row="2" x:Name="Slider"></Slider>
+		
+    </Grid>
+</Window>

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using NetAudioPlayer.Core.Attribute;
 using NetAudioPlayer.Core.Model;
+using NetAudioPlayer.Core.Model.Json;
 using Newtonsoft.Json;
 
 namespace NetAudioPlayer.Core.Message
@@ -15,13 +16,13 @@ namespace NetAudioPlayer.Core.Message
         /// Список элементов для воспроизведения
         /// </summary>
         [JsonProperty(@"items")]
-        public IEnumerable<string> Items { get; set; }
+        public IEnumerable<Track> Items { get; set; }
 
         /// <summary>
         /// Первый элемент для воспроизведения. 
         /// Если не указан, то используется первый элемент из списка
         /// </summary>
-        [JsonProperty(@"item")]
-        public string Item { get; set; }
+        [JsonProperty(@"item", NullValueHandling = NullValueHandling.Ignore)]
+        public Track Item { get; set; }
     }
 }

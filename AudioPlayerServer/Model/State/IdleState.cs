@@ -1,18 +1,29 @@
-﻿using NetAudioPlayer.Core.Message;
+﻿using System;
+using NetAudioPlayer.Core.Message;
+using NetAudioPlayer.Core.Model;
 
 namespace NetAudioPlayer.AudioPlayerServer.Model.State
 {
     internal sealed class IdleState : StateBase
     {
-        #region Overrides of PlayerServiceStateBase
+        protected override PlayerState State { get; } = PlayerState.Idle;
 
         protected override IMessage HandlePlayMessage(PlayMessage message)
-        {                         
-            var response = SwitchState<PlayState>(message);
+        {                     
+            AudioEngine.Init();
+                
+            var response = SwitchState(States.Play, message);
 
             return response;
         }
 
-        #endregion
+        protected override void OnSwitched(StateBase prevState)
+        {
+            AudioEngine.Deinit();
+            Playlist.Reset();
+            
+            SendStatusMessage();
+                        
+        }
     }
 }

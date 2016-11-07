@@ -17,7 +17,7 @@ namespace NetAudioPlayer.Core.Converters
         /// <param name="writer">The <see cref="T:Newtonsoft.Json.JsonWriter"/> to write to.</param><param name="value">The value.</param><param name="serializer">The calling serializer.</param>
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-           serializer.Serialize(writer, ((TimeSpan)value).TotalSeconds);
+            writer.WriteValue(((TimeSpan)value).TotalSeconds);
         }
 
         /// <summary>
@@ -29,7 +29,14 @@ namespace NetAudioPlayer.Core.Converters
         /// </returns>
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            throw new NotImplementedException();
+            if (reader.Value == null)
+            {
+                return null;
+            }
+
+            var seconds = (double)reader.Value;
+
+            return TimeSpan.FromSeconds(seconds);
         }
 
         /// <summary>
