@@ -1,7 +1,8 @@
 ﻿using System.Diagnostics;
 using System.IO;
 using NAudio.Wave;
-using NetAudioPlayer.Core.Model.Json;
+using NetAudioPlayer.Core.Data;
+using NetAudioPlayer.Core.Model;
 
 namespace NetAudioPlayer.AudioPlayerServer.Model
 {

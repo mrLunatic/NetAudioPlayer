@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using NetAudioPlayer.Core.Data;
 using NetAudioPlayer.Core.Model;
-using NetAudioPlayer.Core.Model.Json;
 
 namespace NetAudioPlayer.AudioPlayerServer.Components
 {

@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
 
-namespace NetAudioPlayer.Core.Model.Json
+namespace NetAudioPlayer.Core.Data
 {
     /// <summary>
     /// Композиция
@@ -38,6 +38,11 @@ namespace NetAudioPlayer.Core.Model.Json
         public int AlbumId { get; set; }
 
         /// <summary>
+        /// Номер композиции в альбоме
+        /// </summary>
+        public int AlbumNumber { get; set; }
+
+        /// <summary>
         /// Название альбома
         /// </summary>
         public string AlbumName { get; set; }      
@@ -45,6 +50,18 @@ namespace NetAudioPlayer.Core.Model.Json
         /// <summary>
         /// Путь к медиафайлу
         /// </summary>
-        public string Uri { get; set; }  
+        public string Uri { get; set; }
+
+        /// <summary>
+        /// Рейтинг композиции
+        /// </summary>
+        [JsonProperty(@"rating")]
+        public int? Rating { get; set; }
+
+        /// <summary>
+        /// Дополнительная метка
+        /// </summary>
+        [JsonProperty(@"tag")]
+        public string Tag { get; set; }
     }
 }

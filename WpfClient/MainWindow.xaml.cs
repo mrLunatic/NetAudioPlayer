@@ -15,8 +15,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using NetAudioPlayer.AudioPlayerServer.Components;
 using NetAudioPlayer.AudioPlayerServer.Service;
+using NetAudioPlayer.Core.Data;
 using NetAudioPlayer.Core.Message;
-using NetAudioPlayer.Core.Model.Json;
+using NetAudioPlayer.Core.Model;
 using SimpleTCP;
 
 namespace WpfClient

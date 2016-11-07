@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace NetAudioPlayer.Core.Model.Json
+namespace NetAudioPlayer.Core.Data
 {
     /// <summary>
     /// Исполнитель
@@ -30,5 +30,17 @@ namespace NetAudioPlayer.Core.Model.Json
         /// </summary>
         [JsonProperty(@"TracksCount")]
         public int TracksCount { get; set; }
+
+        /// <summary>
+        /// Рейтинг исполнителя
+        /// </summary>
+        [JsonProperty(@"rating")]
+        public int? Rating { get; set; }
+
+        /// <summary>
+        /// Дополнительная метка
+        /// </summary>
+        [JsonProperty(@"tag")]
+        public string Tag { get; set; }
     }
 }

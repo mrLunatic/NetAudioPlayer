@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using NetAudioPlayer.Core.Attribute;
+using NetAudioPlayer.Core.Data;
 using NetAudioPlayer.Core.Model;
-using NetAudioPlayer.Core.Model.Json;
 using Newtonsoft.Json;
 
 namespace NetAudioPlayer.Core.Message

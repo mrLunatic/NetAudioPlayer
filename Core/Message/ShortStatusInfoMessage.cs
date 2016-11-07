@@ -1,7 +1,6 @@
 ﻿using System;
 using NetAudioPlayer.Core.Attribute;
 using NetAudioPlayer.Core.Converters;
-using NetAudioPlayer.Core.Model.Json;
 using Newtonsoft.Json;
 
 namespace NetAudioPlayer.Core.Message

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetAudioPlayer.Core", "Core\NetAudioPlayer.Core.csproj", "{B3DC83FE-E0A2-4FCB-9A29-78C6FDB5D01C}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetAudioPlayer.ConsoleServer", "ConsoleServer\NetAudioPlayer.ConsoleServer.csproj", "{95204442-5D93-4259-B40C-87ED00EFD69F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetAudioPlayer.WebApi", "NetAudioPlayer.WebApi\NetAudioPlayer.WebApi.csproj", "{A2648B86-5B2E-4EE0-B381-1A89FD744D50}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetAudioPlayer.DataAccessLayer", "DataAccessLayer\NetAudioPlayer.DataAccessLayer.csproj", "{E815582C-5974-4545-92C2-06A18E9A752C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +49,10 @@ Global
 		{A2648B86-5B2E-4EE0-B381-1A89FD744D50}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2648B86-5B2E-4EE0-B381-1A89FD744D50}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2648B86-5B2E-4EE0-B381-1A89FD744D50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E815582C-5974-4545-92C2-06A18E9A752C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E815582C-5974-4545-92C2-06A18E9A752C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E815582C-5974-4545-92C2-06A18E9A752C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E815582C-5974-4545-92C2-06A18E9A752C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,6 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using NetAudioPlayer.Core.Model;
+using Newtonsoft.Json;
 
-namespace NetAudioPlayer.Core.Model.Json
+namespace NetAudioPlayer.Core.Data
 {
     /// <summary>
     /// Альбом
@@ -10,25 +11,37 @@ namespace NetAudioPlayer.Core.Model.Json
         /// <summary>
         /// Уникальный идентификатор 
         /// </summary>
-        [JsonProperty(@"Id")]
+        [JsonProperty(@"id")]
         public int Id { get; set; }
 
         /// <summary>
         /// Идентификатор исполнителя
         /// </summary>
-        [JsonProperty(@"Artist")]
-        public Artist Artist { get; set; }
+        [JsonProperty(@"artist")]
+        public int ArtistId { get; set; }
 
         /// <summary>
         /// Год выпуска альбома
         /// </summary>
-        [JsonProperty(@"Year")]
+        [JsonProperty(@"year")]
         public int Year { get; set; }
 
         /// <summary>
         /// Количество песен в альбоме
         /// </summary>
-        [JsonProperty(@"TrackCount")]
+        [JsonProperty(@"trackCount")]
         public int TrackCount { get; set; }
+
+        /// <summary>
+        /// Рейтинг альбома
+        /// </summary>
+        [JsonProperty(@"rating")]
+        public int? Rating { get; set; }
+
+        /// <summary>
+        /// Дополнительная метка
+        /// </summary>
+        [JsonProperty(@"tag")]
+        public string Tag { get; set; }
     }
 }

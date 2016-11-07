@@ -4,7 +4,8 @@ using System.Threading.Tasks;
 using NAudio.CoreAudioApi;
 using NAudio.Utils;
 using NAudio.Wave;
-using NetAudioPlayer.Core.Model.Json;
+using NetAudioPlayer.Core.Data;
+using NetAudioPlayer.Core.Model;
 
 namespace NetAudioPlayer.AudioPlayerServer.Components
 {
