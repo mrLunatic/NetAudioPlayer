@@ -1,7 +1,7 @@
 using System;
 using NetAudioPlayer.Core.Message;
 
-namespace NetAudioPlayer.AudioPlayerServer.Components
+namespace NetAudioPlayer.Core.Components.Communication
 {
     /// <summary>
     /// Данные события полученного запроса

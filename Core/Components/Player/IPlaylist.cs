@@ -2,7 +2,7 @@
 using NetAudioPlayer.Core.Data;
 using NetAudioPlayer.Core.Model;
 
-namespace NetAudioPlayer.AudioPlayerServer.Components
+namespace NetAudioPlayer.Core.Components.Player
 {
     /// <summary>
     /// Плейлист

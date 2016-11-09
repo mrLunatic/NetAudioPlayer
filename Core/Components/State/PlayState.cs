@@ -1,21 +1,22 @@
 ﻿using System;
-using System.Timers;
+using NetAudioPlayer.Core.Components.Common;
 using NetAudioPlayer.Core.Message;
-using NetAudioPlayer.Core.Message.AudioServiceMessage;
 using NetAudioPlayer.Core.Model;
 
-namespace NetAudioPlayer.AudioPlayerServer.Model.State
+namespace NetAudioPlayer.Core.Components.State
 {
     internal sealed class PlayState : StateBase
     {
+        private const double TimerInterval = 750;
+
         protected override PlayerState State { get; } = PlayerState.Play;
 
-        private readonly Timer _timer = new Timer(1000);
+        private readonly ITimer _timer = ServiceLocator.Current.CreateInstance<ITimer>();
 
 
         public PlayState()
         {
-            _timer.Elapsed += TimerOnElapsed;
+            _timer.Tick += TimerOnElapsed;
             AudioEngine.PlaybackStopped += AudioEngineOnPlaybackStopped;
         }
 
@@ -36,7 +37,7 @@ namespace NetAudioPlayer.AudioPlayerServer.Model.State
             }
         }
 
-        private void TimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
+        private void TimerOnElapsed(object sender, EventArgs args)
         {
             SendShortStatusMessage();
         }
@@ -56,7 +57,7 @@ namespace NetAudioPlayer.AudioPlayerServer.Model.State
 
                     SendStatusMessage();
 
-                    _timer.Start();
+                    _timer.Start(TimerInterval);
                 }
                 else
                 {
@@ -156,7 +157,7 @@ namespace NetAudioPlayer.AudioPlayerServer.Model.State
                 Playlist.Play(message.Item);
                 AudioEngine.Play(Playlist.Item);
 
-                _timer.Start();
+                _timer.Start(TimerInterval);
 
                 SendStatusMessage();
 
@@ -185,7 +186,7 @@ namespace NetAudioPlayer.AudioPlayerServer.Model.State
 
                     SendStatusMessage();
 
-                    _timer.Start();
+                    _timer.Start(TimerInterval);
                 }
                 else
                 {

@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using NAudio.CoreAudioApi;
 using NAudio.Utils;
 using NAudio.Wave;
+using NetAudioPlayer.Core.Components;
+using NetAudioPlayer.Core.Components.Player;
 using NetAudioPlayer.Core.Data;
 using NetAudioPlayer.Core.Model;
 

@@ -1,10 +1,7 @@
 ﻿using System;
-using System.IO;
-using NetAudioPlayer.AudioPlayerServer.Model;
 using NetAudioPlayer.Core.Data;
-using NetAudioPlayer.Core.Model;
 
-namespace NetAudioPlayer.AudioPlayerServer.Components
+namespace NetAudioPlayer.Core.Components.Player
 {
     /// <summary>
     /// Компонент, отвечающий за работу с аудио

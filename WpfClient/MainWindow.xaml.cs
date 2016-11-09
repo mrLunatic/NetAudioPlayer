@@ -1,34 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using NetAudioPlayer.AudioPlayerServer.Components;
-using NetAudioPlayer.AudioPlayerServer.Service;
 using NetAudioPlayer.Core.Data;
 using NetAudioPlayer.Core.Message;
-using NetAudioPlayer.Core.Model;
+using NetAudioPlayer.Core.Service;
 using SimpleTCP;
 
-namespace WpfClient
+namespace NetAudioPlayer.WpfClient
 {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-        PlayerService _service;
-
         SimpleTcpClient _client;
         
         

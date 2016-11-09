@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NetAudioPlayer.DataAccessLayer.Model
+﻿namespace NetAudioPlayer.Core.Components.DAL
 {
     /// <summary>
     /// Параметры пагинации

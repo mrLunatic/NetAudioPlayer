@@ -1,12 +1,9 @@
 ﻿using System.Diagnostics;
-using System.IO;
-using NAudio.Wave;
 using NetAudioPlayer.Core.Data;
-using NetAudioPlayer.Core.Model;
 
-namespace NetAudioPlayer.AudioPlayerServer.Model
+namespace NetAudioPlayer.Core.Components.Player
 {
-    [DebuggerDisplay("{Name}. Played: {IsPlayed}")]
+    [DebuggerDisplay("{Track}. Played: {IsPlayed}")]
     public class PlaylistItem
     {
         public Track Track { get; }

@@ -1,8 +1,7 @@
 using System;
 using System.IO;
-using NetAudioPlayer.AudioPlayerServer.Model;
 
-namespace NetAudioPlayer.AudioPlayerServer.Components
+namespace NetAudioPlayer.Core.Components.Player
 {
     /// <summary>
     /// Загрузчик файлов

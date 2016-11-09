@@ -52,29 +52,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\ICommunicationServer.cs" />
-    <Compile Include="Components\IItemLoader.cs" />
-    <Compile Include="Components\ILocalizationService.cs" />
     <Compile Include="Components\LocalizationService.cs" />
     <Compile Include="Components\NAudioEngine.cs" />
-    <Compile Include="Components\RequestRecievedEventArgs.cs" />
     <Compile Include="Components\SimpleTcpServer.cs" />
-    <Compile Include="Components\IPlaylist.cs" />
     <Compile Include="Components\TcpServer.cs" />
-    <Compile Include="Model\PlaylistItem.cs" />
-    <Compile Include="Model\State\IdleState.cs" />
-    <Compile Include="Model\State\PauseState.cs" />
-    <Compile Include="Model\State\StateBase.cs" />
-    <Compile Include="Components\Playlist.cs" />
-    <Compile Include="Model\State\PlayState.cs" />
-    <Compile Include="Model\State\States.cs" />
-    <Compile Include="Model\State\StopState.cs" />
+    <Compile Include="Components\Timer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Components\IAudioEngine.cs" />
-    <Compile Include="Service\PlayerService.cs" />
-    <Compile Include="Service\ServiceLocator.cs" />
-    <Compile Include="Service\Strings.cs" />
-    <Compile Include="Service\UniversalItemLoader.cs" />
+    <Compile Include="Components\UniversalItemLoader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -85,6 +69,7 @@
       <Name>NetAudioPlayer.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

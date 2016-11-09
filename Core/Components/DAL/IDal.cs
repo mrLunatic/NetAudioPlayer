@@ -1,10 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Net.Http.Headers;
-using System.Security.Cryptography.X509Certificates;
 using NetAudioPlayer.Core.Data;
-using NetAudioPlayer.Core.Model;
 
-namespace NetAudioPlayer.DataAccessLayer.Model
+namespace NetAudioPlayer.Core.Components.DAL
 {
     public interface IDal
     {
@@ -159,6 +156,13 @@ namespace NetAudioPlayer.DataAccessLayer.Model
         int DeleteGenre(Genre genre);
 
         #endregion
+
+        #endregion
+
+        #region Strings
+
+        string GetLocalizedString(string name, string lang);
+
 
         #endregion
     }

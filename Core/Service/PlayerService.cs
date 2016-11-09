@@ -1,14 +1,9 @@
-﻿using System;
-using System.Net;
-using NAudio.Wave;
-using NetAudioPlayer.AudioPlayerServer.Components;
-using NetAudioPlayer.AudioPlayerServer.Model;
-using NetAudioPlayer.AudioPlayerServer.Model.State;
-using NetAudioPlayer.Core.Message;
-using NetAudioPlayer.Core.Model;
-using SimpleTCP;
+﻿using NetAudioPlayer.Core.Components;
+using NetAudioPlayer.Core.Components.Communication;
+using NetAudioPlayer.Core.Components.Player;
+using NetAudioPlayer.Core.Components.State;
 
-namespace NetAudioPlayer.AudioPlayerServer.Service
+namespace NetAudioPlayer.Core.Service
 {
     public sealed class PlayerService
     {
@@ -54,7 +49,7 @@ namespace NetAudioPlayer.AudioPlayerServer.Service
 
         public void Start(string host, string service)
         {
-            Server.Start(IPAddress.Parse(host), service);
+            Server.Start(host, service);
         }
 
         public void Stop()

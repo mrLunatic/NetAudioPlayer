@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NetAudioPlayer.AudioPlayerServer.Components;
-using NetAudioPlayer.AudioPlayerServer.Model;
+﻿using System.IO;
+using NetAudioPlayer.Core.Components.Player;
 
-namespace NetAudioPlayer.AudioPlayerServer.Service
+namespace NetAudioPlayer.AudioPlayerServer.Components
 {
     internal class UniversalItemLoader : IItemLoader
     {

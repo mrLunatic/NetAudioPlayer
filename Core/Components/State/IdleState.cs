@@ -1,8 +1,7 @@
-﻿using System;
-using NetAudioPlayer.Core.Message;
+﻿using NetAudioPlayer.Core.Message;
 using NetAudioPlayer.Core.Model;
 
-namespace NetAudioPlayer.AudioPlayerServer.Model.State
+namespace NetAudioPlayer.Core.Components.State
 {
     internal sealed class IdleState : StateBase
     {

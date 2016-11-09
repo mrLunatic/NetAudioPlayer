@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-// ReSharper disable InconsistentNaming
+﻿// ReSharper disable InconsistentNaming
 
-namespace NetAudioPlayer.AudioPlayerServer.Components
+namespace NetAudioPlayer.Core.Components.Common
 {
 
     public enum Strings

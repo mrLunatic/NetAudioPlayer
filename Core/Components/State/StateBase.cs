@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Xml;
-using NAudio.Wave;
-using NetAudioPlayer.AudioPlayerServer.Components;
-using NetAudioPlayer.AudioPlayerServer.Service;
+using NetAudioPlayer.Core.Components.Common;
+using NetAudioPlayer.Core.Components.Communication;
+using NetAudioPlayer.Core.Components.Player;
 using NetAudioPlayer.Core.Message;
-using NetAudioPlayer.Core.Message.AudioServiceMessage;
 using NetAudioPlayer.Core.Model;
-using SimpleTCP;
-using Strings = NetAudioPlayer.AudioPlayerServer.Components.Strings;
 
-namespace NetAudioPlayer.AudioPlayerServer.Model.State
+namespace NetAudioPlayer.Core.Components.State
 {
 
     abstract class StateBase

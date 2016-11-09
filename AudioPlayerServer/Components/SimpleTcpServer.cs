@@ -6,7 +6,9 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using NetAudioPlayer.AudioPlayerServer.Components;
-using NetAudioPlayer.AudioPlayerServer.Service;
+using NetAudioPlayer.Core.Components;
+using NetAudioPlayer.Core.Components.Common;
+using NetAudioPlayer.Core.Components.Communication;
 using NetAudioPlayer.Core.Message;
 using NetAudioPlayer.Core.Model;
 using SimpleTCP;
@@ -93,7 +95,7 @@ namespace NetAudioPlayer.AudioPlayerServer.Components
         /// </summary>
         /// <param name="host">Адрес хоста, на котором размещается сервер</param>
         /// <param name="serviceName">Имя службы (порт), на котором размещается сервер</param>
-        public void Start(IPAddress host, string serviceName)
+        public void Start(string host, string serviceName)
         {
             if (_server.IsStarted)
             {
@@ -107,7 +109,13 @@ namespace NetAudioPlayer.AudioPlayerServer.Components
                 throw new ArgumentException(@"Tcp server allow only port numbers", nameof(serviceName));
             }
 
-            _server.Start(host, port);
+            IPAddress ipAddress;
+            if (!IPAddress.TryParse(host, out ipAddress))
+            {
+                throw new ArgumentException();
+            }
+
+            _server.Start(ipAddress, port);
         }
 
         /// <summary>

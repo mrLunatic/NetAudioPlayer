@@ -2,11 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NetAudioPlayer.AudioPlayerServer.Components;
 
-namespace NetAudioPlayer.AudioPlayerServer.Service
+namespace NetAudioPlayer.Core.Components
 {
     public interface IServiceLocator : IDisposable
     {
@@ -38,6 +35,13 @@ namespace NetAudioPlayer.AudioPlayerServer.Service
         T GetInstance<T>(string key = null) where T : class;
 
         /// <summary>
+        /// Создает экземпляр указанного типа без регистрации его в системе
+        /// </summary>
+        /// <typeparam name="T">Зарегистрированный тип требуемого</typeparam>
+        /// <returns></returns>
+        T CreateInstance<T>() where T : class;
+
+        /// <summary>
         /// Возвращает все экземляры объектов, привязанных к соответствующему типу
         /// </summary>
         /// <typeparam name="T">Зарегистрированный тип</typeparam>
@@ -64,11 +68,11 @@ namespace NetAudioPlayer.AudioPlayerServer.Service
 
         private class Item<T> : IDisposable where T : class 
         {
-            private readonly Func<T> _factory;
-
             private T _instance;
 
-            public T Instance => _instance ?? (_instance = _factory.Invoke());
+            public Func<T> Factory { get; }
+
+            public T Instance => _instance ?? (_instance = Factory.Invoke());
 
             public Item(Func<T> factory, bool lazy = true)
             {
@@ -77,7 +81,7 @@ namespace NetAudioPlayer.AudioPlayerServer.Service
                     throw  new ArgumentNullException(nameof(factory));
                 }
 
-                _factory = factory;
+                Factory = factory;
 
                 if (!lazy)
                 {
@@ -179,6 +183,20 @@ namespace NetAudioPlayer.AudioPlayerServer.Service
             var items = GetItems<T>();
 
             return items?[key ?? string.Empty]?.Instance;
+        }
+
+        /// <summary>
+        /// Создает экземпляр указанного типа без регистрации его в системе
+        /// </summary>
+        /// <typeparam name="T">Зарегистрированный тип требуемого</typeparam>
+        /// <returns></returns>
+        public T CreateInstance<T>() where T : class
+        {
+            return GetItems<T>()
+                .Values
+                .FirstOrDefault()?
+                .Factory?
+                .Invoke();
         }
 
         /// <summary>

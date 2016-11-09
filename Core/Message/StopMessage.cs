@@ -1,8 +1,6 @@
 ﻿using NetAudioPlayer.Core.Attribute;
-using NetAudioPlayer.Core.Model;
-using Newtonsoft.Json;
 
-namespace NetAudioPlayer.Core.Message.AudioServiceMessage
+namespace NetAudioPlayer.Core.Message
 {
     /// <summary>
     /// Сообщение-комманда остановки воспроизведения

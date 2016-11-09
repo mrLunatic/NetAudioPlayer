@@ -1,8 +1,7 @@
 using System;
-using System.Net;
 using NetAudioPlayer.Core.Message;
 
-namespace NetAudioPlayer.AudioPlayerServer.Components
+namespace NetAudioPlayer.Core.Components.Communication
 {
     /// <summary>
     /// Компонент, отвечающий за сетевую коммуникацию
@@ -19,7 +18,7 @@ namespace NetAudioPlayer.AudioPlayerServer.Components
         /// </summary>
         /// <param name="host">Адрес хоста, на котором размещается сервер</param>
         /// <param name="serviceName">Имя службы (порт), на котором размещается сервер</param>
-        void Start(IPAddress host, string serviceName);
+        void Start(string host, string serviceName);
 
         /// <summary>
         /// Останавливает сервер

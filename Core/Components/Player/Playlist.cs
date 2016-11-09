@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using NetAudioPlayer.AudioPlayerServer.Model;
-using NetAudioPlayer.AudioPlayerServer.Service;
 using NetAudioPlayer.Core.Data;
 using NetAudioPlayer.Core.Model;
 
-namespace NetAudioPlayer.AudioPlayerServer.Components
+namespace NetAudioPlayer.Core.Components.Player
 {
     [DebuggerDisplay("{_items.Count} items. Current: {Item?.Name}")]
     public class Playlist : IPlaylist

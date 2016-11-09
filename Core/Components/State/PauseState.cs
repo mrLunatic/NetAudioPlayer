@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NetAudioPlayer.Core.Message;
-using NetAudioPlayer.Core.Message.AudioServiceMessage;
 using NetAudioPlayer.Core.Model;
 
-namespace NetAudioPlayer.AudioPlayerServer.Model.State
+namespace NetAudioPlayer.Core.Components.State
 {
     internal sealed class PauseState : StateBase
     {

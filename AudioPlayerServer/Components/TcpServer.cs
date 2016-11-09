@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -9,103 +8,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using NetAudioPlayer.Core.Message;
+using NetAudioPlayer.Core.Components;
+using NetAudioPlayer.Core.Components.Communication;
 
 namespace NetAudioPlayer.AudioPlayerServer.Components
 {
-    public abstract class CommunicationServerBase : ICommunicationServer
-    {
-        #region Implementation of IDisposable
-
-        /// <summary>
-        /// Выполняет определяемые приложением задачи, связанные с высвобождением или сбросом неуправляемых ресурсов.
-        /// </summary>
-        public virtual void Dispose()
-        {
-
-        }
-
-        #endregion
-
-        #region Implementation of ICommunicationServer
-
-        public event EventHandler<RequestRecievedEventArgs> RequestRecieved;
-
-        /// <summary>
-        /// Запускает сервер с указанными параметрами
-        /// </summary>
-        /// <param name="host">Адрес хоста, на котором размещается сервер</param>
-        /// <param name="serviceName">Имя службы (порт), на котором размещается сервер</param>
-        public void Start(IPAddress host, string serviceName)
-        {
-            int port;
-            if (!int.TryParse(serviceName, out port))
-            {
-                throw new ArgumentException();
-            }
-
-            StartInternal(host, port);
-        }
-
-        /// <summary>
-        /// Останавливает сервер
-        /// </summary>
-        public void Stop()
-        {
-            StopInternal();
-        }
-
-        /// <summary>
-        /// Отправляет сообщение всем подключенным клиентам
-        /// </summary>
-        /// <param name="message"></param>
-        public void SendBroadcast(IMessage message)
-        {
-            if (message == null)
-            {
-                return;                
-            }
-            var str = MessageParser.Serialize(message);
-            SendBroadcast(MessageParser.Serialize(message));
-        }
-
-        #endregion
-
-        protected abstract void StartInternal(IPAddress host, int port);
-
-        protected abstract void StopInternal();
-
-        protected abstract void SendBroadcast(string data);
-
-        protected string OnMessageRecieved(string message)
-        {
-            var msg = MessageParser.Parse(message);
-
-            if (msg == null)
-            {
-                return null;
-            }
-
-            var response = OnRequestRecieved(msg);
-
-            if (response == null)
-            {
-                return null;
-            }
-
-            return MessageParser.Serialize(response);
-        }
-
-        private IMessage OnRequestRecieved(IMessage request)
-        {
-            var args = new RequestRecievedEventArgs(request);
-
-            RequestRecieved?.Invoke(this, args);
-
-            return args.Response;
-        }
-    }
-
     public sealed class TcpServer : CommunicationServerBase
     {
         private CancellationTokenSource _cts;
@@ -117,13 +24,15 @@ namespace NetAudioPlayer.AudioPlayerServer.Components
         private readonly IDictionary<TcpClient, Task>  _clients = new ConcurrentDictionary<TcpClient, Task>();
 
 
-        protected override void StartInternal(IPAddress host, int port)
+        public override void Start(string host, string port)
         {            
+
+
             _cts?.Cancel();
             _cts?.Dispose();
 
             _cts = new CancellationTokenSource();
-            _listener = new TcpListener(host, port);
+            _listener = new TcpListener(IPAddress.Parse(host), int.Parse(port));
 
             _listener.Start();
 
