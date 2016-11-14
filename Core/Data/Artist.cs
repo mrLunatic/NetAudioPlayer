@@ -5,42 +5,24 @@ namespace NetAudioPlayer.Core.Data
     /// <summary>
     /// Исполнитель
     /// </summary>
-    public class Artist
+    public class Artist : Item
     {
-        /// <summary>
-        /// Идентификатор
-        /// </summary>
-        [JsonProperty(@"Id")]
-        public int Id { get; set; }
+        public const string AlbumsCountField = @"albumsCount";
 
-        /// <summary>
-        /// Имя
-        /// </summary>
-        [JsonProperty(@"Name")]
-        public string Name { get; set; }        
+        public const string TracksCountField = @"tracksCountField";
+
+        public const int DefaultId = 0;
 
         /// <summary>
         /// Количество альбомов
         /// </summary>
-        [JsonProperty(@"AlbumsCount")]
+        [JsonProperty(AlbumsCountField)]
         public int AlbumsCount { get; set; }
 
         /// <summary>
         /// Колечество композиций
         /// </summary>
-        [JsonProperty(@"TracksCount")]
+        [JsonProperty(TracksCountField)]
         public int TracksCount { get; set; }
-
-        /// <summary>
-        /// Рейтинг исполнителя
-        /// </summary>
-        [JsonProperty(@"rating")]
-        public int? Rating { get; set; }
-
-        /// <summary>
-        /// Дополнительная метка
-        /// </summary>
-        [JsonProperty(@"tag")]
-        public string Tag { get; set; }
     }
 }

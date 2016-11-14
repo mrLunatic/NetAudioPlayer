@@ -101,10 +101,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AudioPlayerServer\NetAudioPlayer.AudioPlayerServer.csproj">
-      <Project>{ed41c91e-c89d-450a-b325-ee9c826d030b}</Project>
-      <Name>NetAudioPlayer.AudioPlayerServer</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Core\NetAudioPlayer.Core.csproj">
       <Project>{b3dc83fe-e0a2-4fcb-9a29-78c6fdb5d01c}</Project>
       <Name>NetAudioPlayer.Core</Name>

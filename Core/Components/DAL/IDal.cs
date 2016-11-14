@@ -7,163 +7,115 @@ namespace NetAudioPlayer.Core.Components.DAL
     {
         #region Track
 
-        #region Create
+        /// <summary>
+        /// Создает в базе новую композицию
+        /// </summary>
+        /// <param name="name">Название композиции</param>
+        /// <param name="artistId">Идентификатор исполнителя композиции</param>
+        /// <param name="albumId">Идентификатор альбома композиции</param>
+        /// <param name="albumNumber">Номер композиции в альбоме</param>
+        /// <param name="genreId">Идентификатор жанра</param>
+        /// <param name="duration">Длительность композиции (сек.)</param>
+        /// <param name="uri">Адрес композиции</param>
+        /// <param name="tag">Дополнительная метка</param>
+        /// <returns>идентификатор созданный композиции</returns>
+        int CreateTrack(string name, int artistId, int albumId, int? albumNumber, int genreId, int duration, string uri, string tag);
 
-        Track CreateTrack(string name, int artistId, int albumId, double duration, string uri);
-
-        #endregion
-
-        #region Read
-
+        /// <summary>
+        /// Возвращает композицию с указанным идентификатором.
+        /// <para>Null - если композиция не найдена</para>
+        /// </summary>
+        /// <param name="id">Идентификатор композиции</param>
+        /// <returns></returns>
         Track GetTrack(int id);
 
-        IEnumerable<Track> GetTracks(
-            IEnumerable<int> ids = null,
-            string name = null,
-            int? artistId = null,
-            int? albumId = null,
-            string uri = null,
-            RatingParameter rating = null,
-            string tag = null,
-            PageParameter page = null);
+        /// <summary>
+        /// Возвращает список композиций, соответствующих указанным параметрам
+        /// </summary>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        IEnumerable<Track> GetTracks(TrackRequestParameters parameters);
 
-        #endregion
+        /// <summary>
+        /// Обновляет указанные поля у композиции
+        /// </summary>
+        /// <param name="id">Идентификатор обновляемой композиции</param>
+        /// <param name="parameters">Параметры запроса обновления композиции</param>
+        /// <returns>True, если композиция была успешно обновлена</returns>
+        bool UpdateTrack(int id, TrackUpdateParameters parameters);
 
-        #region Update
-
-        Track UpdateTrack(Track track,
-            string name = null,
-            double? duration = null,
-            int? artistId = null,
-            int? albumId = null,
-            string uri = null,
-            int? rating = null,
-            string tag = null);
-
-        #endregion
-
-        #region Delete
-
-        int DeleteTrack(Track track);
-
-        #endregion
+        /// <summary>
+        /// Удаляет композицию с указанным идентификатором
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>True, если композиция была успешно удалена</returns>
+        bool DeleteTrack(int id);
 
         #endregion
 
         #region Artist
 
-        #region Create
+        /// <summary>
+        /// Создает исполнителя с указанными параметрами
+        /// </summary>
+        /// <param name="name">имя исполнителя</param>
+        /// <param name="tag">Дополнительная метка</param>
+        /// <returns>Идентификатор созанного исполнителя</returns>
+        int CreateArtist(string name, string tag);
 
-        Artist CreateArtist(string name);
-
-        #endregion
-
-        #region Read
-
+        /// <summary>
+        /// Возвращает исполнителя с указанным идентификатором
+        /// </summary>
+        /// <param name="id">Идентификатор исполнителя</param>
+        /// <returns>Исполнитель с указанным идентификатором</returns>
         Artist GetArtist(int id);
 
-        IEnumerable<Artist> GetArtists(
-            IEnumerable<int> ids = null,
-            string name = null,
-            PageParameter page = null,
-            RatingParameter rating = null,
-            string tag = null);
+        /// <summary>
+        /// Возвращает список исполнителей, удовлетворяющих указанным параметрам
+        /// </summary>
+        /// <param name="parameters">Параметры поиска исполнителей</param>
+        /// <returns>Список подходящих исполнителей</returns>
+        IEnumerable<Artist> GetArtists(ArtistRequestParameters parameters);
 
-        #endregion
+        /// <summary>
+        /// Обновляет исполнителя с указанным идентификатором
+        /// </summary>
+        /// <param name="id">Идентификатор исполнителя</param>
+        /// <param name="parameters">Параметры обновления</param>
+        /// <returns>True, если исполнитель был успешно обновлен</returns>
+        bool UpdateArtist(int id, ArtistUpdateParameters parameters);
 
-        #region Update
-
-        Artist UpdateArtist(Artist artist, string name = null);
-
-        #endregion
-
-        #region Delete
-
-        int DeleteArtist(Artist artist);
-
-        #endregion
+        bool DeleteArtist(int id);
 
         #endregion
 
         #region Album
 
-        #region Create
-
-        Album CreateAlbum(string name, int artistId, int? year, string tag);
-
-        #endregion
-
-        #region Read
+        int CreateAlbum(string name, int artistId, int year, string tag);
 
         Album GetAlbum(int id);
 
-        IEnumerable<Album> GetAlbums(
-            IEnumerable<int> ids = null,
-            int? artistId = null,
-            IEnumerable<int> artistIds = null,
-            int? yearMin = null,
-            int? yearMax = null,
-            int? year = null,
-            PageParameter page = null,
-            RatingParameter rating = null,            
-            string tag = null);
+        IEnumerable<Album> GetAlbums(AlbumRequestParameters parameters);
 
-        #endregion
+        bool UpdateAlbum(int id, AlbumUpdateParameters parameters);
 
-        #region Update
-
-        Album UpdateAlbum(Album album,
-            string name = null,
-            int? artistId = null,
-            int? year = null,
-            int? rating = null,
-            string tag = null);
-
-        #endregion
-
-        #region Delete
-
-        int DeleteAlbum(Album album);
-
-        #endregion
+        bool DeleteAlbum(int id);
 
         #endregion
 
         #region Genres
 
-        #region Create
-
-        Genre CreateGenre(string name, string tag = null);
-
-        #endregion
-
-        #region Read
+        int CreateGenre(string name, string tag);
 
         Genre GetGenre(int id);
 
-        IEnumerable<Genre> GetGenres(IEnumerable<int> ids = null, RatingParameter rating = null, PageParameter page = null, string tag = null);
+        IEnumerable<Genre> GetGenres(GenreRequestParameters parameters);
+
+        bool UpdateGenre(int id, GenreUpdateParameters parameters);
+
+        bool DeleteGenre(int id);
 
         #endregion
 
-        #region Update
-
-        Genre UpdateGenre(Genre genre, string name = null, int? rating = null, string tag = null);
-
-        #endregion
-
-        #region Delete
-
-        int DeleteGenre(Genre genre);
-
-        #endregion
-
-        #endregion
-
-        #region Strings
-
-        string GetLocalizedString(string name, string lang);
-
-
-        #endregion
     }
 }

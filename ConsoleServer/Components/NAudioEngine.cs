@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
 using NAudio.CoreAudioApi;
 using NAudio.Utils;
 using NAudio.Wave;
-using NetAudioPlayer.Core.Components;
 using NetAudioPlayer.Core.Components.Player;
 using NetAudioPlayer.Core.Data;
-using NetAudioPlayer.Core.Model;
 
-namespace NetAudioPlayer.AudioPlayerServer.Components
+namespace NetAudioPlayer.ConsoleServer.Components
 {
     public sealed class NAudioEngine : IAudioEngine
     {
@@ -168,7 +164,7 @@ namespace NetAudioPlayer.AudioPlayerServer.Components
                     RequestFloatOutput = true
                 });
 
-            track.Duration = Stream.TotalTime.TotalSeconds;
+            track.Duration = Convert.ToInt32(Stream.TotalTime.TotalSeconds);
 
             WaveOut = new WasapiOut(AudioClientShareMode.Shared, 0);
             WaveOut.Init(Stream);

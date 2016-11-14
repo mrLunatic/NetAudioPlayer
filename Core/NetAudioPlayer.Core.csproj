@@ -34,14 +34,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .NET Framework is automatically included -->
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Components\Communication\CommunicationServerBase.cs" />
-    <Compile Include="Components\DAL\CommonParameter.cs" />
+    <Compile Include="Components\DAL\AlbumRequestParameters.cs" />
+    <Compile Include="Components\DAL\AlbumUpdateParameters.cs" />
+    <Compile Include="Components\DAL\ArtistRequestParameters.cs" />
+    <Compile Include="Components\DAL\ArtistUpdateParameters.cs" />
+    <Compile Include="Components\DAL\CommonRequestParameters.cs" />
+    <Compile Include="Components\DAL\CommonUpdateParameters.cs" />
+    <Compile Include="Components\DAL\GenreRequestParameters.cs" />
+    <Compile Include="Components\DAL\GenreUpdateParameters.cs" />
     <Compile Include="Components\DAL\IDal.cs" />
-    <Compile Include="Components\DAL\PageParameter.cs" />
-    <Compile Include="Components\DAL\RatingParameter.cs" />
+    <Compile Include="Components\DAL\TrackRequestParameters.cs" />
+    <Compile Include="Components\DAL\TrackUpdateParameters.cs" />
     <Compile Include="Components\Player\IAudioEngine.cs" />
     <Compile Include="Components\Communication\ICommunicationServer.cs" />
     <Compile Include="Components\Player\IItemLoader.cs" />
@@ -60,6 +64,7 @@
     <Compile Include="Components\State\States.cs" />
     <Compile Include="Components\State\StopState.cs" />
     <Compile Include="Converters\TimeSpanConverter.cs" />
+    <Compile Include="Data\Item.cs" />
     <Compile Include="Message\MessageBase.cs" />
     <Compile Include="Message\MessageParser.cs" />
     <Compile Include="Message\NextMessage.cs" />
@@ -89,7 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.9.0.2-beta1\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>

@@ -1,17 +1,13 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml;
-using NetAudioPlayer.Core.Components;
 using NetAudioPlayer.Core.Components.Communication;
 
-namespace NetAudioPlayer.AudioPlayerServer.Components
+namespace NetAudioPlayer.ConsoleServer.Components
 {
     public sealed class TcpServer : CommunicationServerBase
     {

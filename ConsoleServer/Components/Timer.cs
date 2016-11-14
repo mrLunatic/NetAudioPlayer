@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NetAudioPlayer.Core.Components.Common;
 
-namespace NetAudioPlayer.AudioPlayerServer.Components
+namespace NetAudioPlayer.ConsoleServer.Components
 {
     public sealed class Timer : ITimer, IDisposable
     {

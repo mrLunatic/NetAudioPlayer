@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using NetAudioPlayer.Core.Components.Player;
 
-namespace NetAudioPlayer.AudioPlayerServer.Components
+namespace NetAudioPlayer.ConsoleServer.Components
 {
     internal class UniversalItemLoader : IItemLoader
     {
