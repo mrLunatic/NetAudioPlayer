@@ -19,7 +19,7 @@ namespace NetAudioPlayer.Core.Components.DAL
         /// <param name="uri">Адрес композиции</param>
         /// <param name="tag">Дополнительная метка</param>
         /// <returns>идентификатор созданный композиции</returns>
-        int CreateTrack(string name, int artistId, int albumId, int? albumNumber, int genreId, int duration, string uri, string tag);
+        int CreateTrack(string name, int artistId, int albumId, int albumNumber, int genreId, int duration, string uri, string tag);
 
         /// <summary>
         /// Возвращает композицию с указанным идентификатором.

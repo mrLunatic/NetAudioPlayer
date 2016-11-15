@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
+using System.Net.Configuration;
 using System.Text;
 using NetAudioPlayer.Core.Components.DAL;
 using NetAudioPlayer.Core.Data;
@@ -39,15 +40,42 @@ namespace NetAudioPlayer.ConsoleServer.Components.DAL
 
         #region Track
 
-        public int CreateTrack(string name, int artistId, int albumId, int? albumNumber, int genreId, int duration,
-            string uri, string tag)
+        public int CreateTrack(string name, int artistId, int albumId, int albumNumber, int genreId, int duration, string uri, string tag)
         {
-            throw new NotImplementedException();
+            return CreateItem(
+                TrackTable,
+                new Dictionary<string, object>
+                {
+                    { Track.NameField, name },
+                    { Track.ArtistIdField, artistId },
+                    { Track.AlbumIdField, albumId },
+                    { Track.AlbumNumberField, albumNumber },
+                    { Track.GenreIdField, genreId },
+                    { Track.DurationField, duration },
+                    { Track.UriField, uri },
+                    { Track.TagField, tag }
+                });
         }
 
         public Track GetTrack(int id)
         {
+            var p = GetItem(
+                TrackTable,
+                id,
+                new[]
+                {
+                    Track.NameField,
+                    Track.ArtistIdField,
+                    Track.AlbumIdField,
+                    Track.AlbumNumberField,
+                    Track.GenreIdField,
+                    Track.DurationField,
+                    Track.UriField,
+                    Track.TagField
+                });
+
             throw new NotImplementedException();
+
         }
 
         public IEnumerable<Track> GetTracks(TrackRequestParameters parameters)
@@ -66,7 +94,6 @@ namespace NetAudioPlayer.ConsoleServer.Components.DAL
         }
 
         #endregion
-
 
         #region Artist
 
@@ -96,7 +123,6 @@ namespace NetAudioPlayer.ConsoleServer.Components.DAL
         }
 
         #endregion
-
 
         #region Album
 
@@ -131,28 +157,23 @@ namespace NetAudioPlayer.ConsoleServer.Components.DAL
 
         public int CreateGenre(string name, string tag)
         {
-            return Create(
+            return CreateItem(
                 GenreTable, 
-                new Dictionary<string, string>
+                new Dictionary<string, object>
                 {
-                    { Genre.NameField,  $@"'{name}'" },
-                    { Genre.TagField,   $@"'{tag ?? string.Empty}'" }
+                    { Genre.NameField,  name },
+                    { Genre.TagField,   tag ?? string.Empty }
                 });
         }
 
         public Genre GetGenre(int id)
         {   
-            var req = new List<string>
-            {
-                { Genre.IdField },
-                { Genre.NameField},
-                { Genre.RatingField},
-                { Genre.TagField } 
-            };
+            var p = GetItem(
+                GenreTable, 
+                id,
+                new List<string> { Genre.IdField, Genre.NameField, Genre.RatingField, Genre.TagField });
 
-            var p = GetItem(GenreTable, id, req);
-
-            return new Genre()
+            return new Genre
             {
                 Id = Convert.ToInt32(p[Genre.IdField]),
                 Name = Convert.ToString(p[Genre.NameField]),
@@ -163,31 +184,32 @@ namespace NetAudioPlayer.ConsoleServer.Components.DAL
 
         public IEnumerable<Genre> GetGenres(GenreRequestParameters parameters)
         {
-            var req = new StringBuilder();
-            req.AppendLine($@"SELECT {Genre.IdField}, {Genre.NameField}, {Genre.RatingField}, {Genre.TagField} FROM {GenreTable}");
-            req.AppendLine($@"WHERE {GetCommonWhere(parameters)}");
+            var items = GetItems(
+                    GenreTable, 
+                    new List<string> { Genre.IdField, Genre.NameField, Genre.RatingField, Genre.TagField }, 
+                    GetCommonWhere(parameters));
 
-            if (parameters.MaxCount.HasValue)
-            {
-                req.Append($@"LIMIT {parameters.MaxCount.Value}");
-            }
-
-            return ExecuteReader(req.ToString(), GetGenres);
+            return items.Select(p => 
+                new Genre
+                {
+                    Id = Convert.ToInt32(p[Genre.IdField]),
+                    Name = Convert.ToString(p[Genre.NameField]),
+                    Rating = Convert.ToInt32(p[Genre.RatingField]),
+                    Tag = Convert.ToString(p[Genre.TagField])
+                }); 
         }
                          
         public bool UpdateGenre(int id, GenreUpdateParameters parameters)
         {
-            var items = GetCommonUpdateItems(parameters);
-
-            if (items.Count == 0 || !Exists(GenreTable, id))
+            if (!Exists(GenreTable, id))
             {
                 return false;
             }
 
-            var set = string.Join(",", items.Select(p => $@"{p.Key} = {p.Value}"));
-            var req = $@"UPDATE {GenreTable} SET {set} WHERE {Genre.IdField} = {id};";
-
-            ExecuteNonQuery(req);
+            UpdateItem(
+                GenreTable,
+                id,
+                GetGenreUpdateItems(parameters));
 
             return true;
         }
@@ -199,9 +221,7 @@ namespace NetAudioPlayer.ConsoleServer.Components.DAL
                 return false;
             }
 
-            var cmd = $@"DELETE FROM {GenreTable} WHERE {Item.IdField} = {id}";
-
-            ExecuteNonQuery(cmd);
+            DeleteItem(GenreTable, id);
 
             return true;
         }
@@ -212,9 +232,9 @@ namespace NetAudioPlayer.ConsoleServer.Components.DAL
 
         #region Private methods
  
-        private static Dictionary<string, string> GetCommonUpdateItems(CommonUpdateParameters parameters)
+        private static IDictionary<string, object> GetCommonUpdateItems(CommonUpdateParameters parameters)
         {
-            var items = new Dictionary<string, string>();
+            var items = new Dictionary<string, object>();
 
             if (parameters.Name != null)
             {
@@ -223,7 +243,7 @@ namespace NetAudioPlayer.ConsoleServer.Components.DAL
 
             if (parameters.Rating.HasValue)
             {
-                items.Add(Item.RatingField, parameters.Rating.Value.ToString("D"));
+                items.Add(Item.RatingField, parameters.Rating.Value);
             }
 
             if (parameters.Tag != null)
@@ -232,35 +252,14 @@ namespace NetAudioPlayer.ConsoleServer.Components.DAL
             }
             return items;
         }
-
-        private static Genre GetGenre(IDataReader reader)
+        private static IDictionary<string, object> GetGenreUpdateItems(GenreUpdateParameters parameters)
         {
-            if (!reader.Read())
-            {
-                return null;
-            }
-
-            return new Genre()
-            {
-                Id = Convert.ToInt32(reader[Genre.IdField]),
-                Name = Convert.ToString(reader[Genre.NameField]),
-                Rating = Convert.ToInt32(reader[Genre.RatingField]),
-                Tag = Convert.ToString(reader[Genre.TagField])
-            };
-        }
-
-        private static IEnumerable<Genre> GetGenres(IDataReader reader)
-        {
-            var genres = new List<Genre>();
-            Genre genre;
-            while ((genre = GetGenre(reader) )!= null)
-            {
-                genres.Add(genre);                
-            }
-            return genres;
+            return GetCommonUpdateItems(parameters);
         } 
 
-        private static StringBuilder GetCommonWhere(CommonRequestParameters p)
+
+
+        private static string GetCommonWhere(CommonRequestParameters p)
         {
             var where = new StringBuilder("1 = 1 ");
 
@@ -299,106 +298,66 @@ namespace NetAudioPlayer.ConsoleServer.Components.DAL
                 where.Append($@"AND {Item.IdField} > {p.Offset}");
             }
 
-            return where;
+            return where.ToString();
         } 
+      
 
-        private int ExecuteNonQuery(string cmd)
-        {
-            using (var connection = new SQLiteConnection($@"Data Source={_dbFileName}; Version=3;"))
-            using (var command = connection.CreateCommand())
-            {
-                command.CommandText = cmd;
-
-                connection.Open();
-                var result =  command.ExecuteNonQuery();
-                connection.Close();
-
-                return result;
-            }
-        }
-
-        private T ExecuteScalar<T>(string cmd)
-        {
-            using (var connection = new SQLiteConnection($@"Data Source={_dbFileName}; Version=3;"))
-            using (var command = connection.CreateCommand())
-            {
-                command.CommandText = cmd;
-
-                connection.Open();
-                var result = command.ExecuteScalar(CommandBehavior.SingleResult);
-
-                if (result is long)
-                {
-                    result = Convert.ToInt32((long) result);
-                }
-
-                return (T) result;
-            }
-        }
-
-        private void ExecuteReader(string cmd, Action<IDataReader> action)
-        {
-            using (var connection = new SQLiteConnection($@"Data Source={_dbFileName}; Version=3;"))
-            using (var command = connection.CreateCommand())
-            {
-                command.CommandText = cmd;
-
-                connection.Open();
-                var reader = command.ExecuteReader();
-
-                action.Invoke(reader);
-
-                connection.Close();
-            }
-        }
-
-        private T ExecuteReader<T>(string cmd, Func<IDataReader, T> action)
-        {
-            using (var connection = new SQLiteConnection($@"Data Source={_dbFileName}; Version=3;"))
-            using (var command = connection.CreateCommand())
-            {
-                command.CommandText = cmd;
-
-                connection.Open();
-                var reader = command.ExecuteReader();
-
-                var result = action.Invoke(reader);
-
-                connection.Close();
-                
-                return result;
-            }
-        }
 
         private bool Exists(string tableName, int id)
         {
             var req = $@"SELECT EXISTS (SELECT {Item.IdField} FROM {tableName} WHERE {Item.IdField} = {id} LIMIT 1);";
 
-            return ExecuteScalar<int>(req) > 0;            
+            using (var connection = new SQLiteConnection($@"Data Source={_dbFileName}; Version=3;"))
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = req.ToString();
+
+                connection.Open();
+
+                var exist = Convert.ToInt32(command.ExecuteScalar()) > 0;
+
+                connection.Close();
+
+                return exist;
+            }
         }
 
-        private int Create(string tableName, IDictionary<string, string> items)
+        private int CreateItem(string tableName, IDictionary<string, object> items)
         {
             var cmd = new StringBuilder();
             cmd.AppendLine($@"INSERT INTO {tableName} ({string.Join(",", items.Keys)})");
-            cmd.AppendLine($@"VALUES ({string.Join(",", items.Keys)});");
+            cmd.AppendLine($@"VALUES ({string.Join(",", items.Values.Select(ToSqlString))});");
             cmd.AppendLine($@"SELECT last_insert_rowid();");
-
-            return ExecuteScalar<int>(cmd.ToString());
-        }
-
-        private IDictionary<string, object> GetItem(string tableName, int id, List<string> fields)
-        {
-            var req = $@"SELECT {string.Join(",", fields)} FROM {tableName} WHERE {Item.IdField} = {id}";
 
             using (var connection = new SQLiteConnection($@"Data Source={_dbFileName}; Version=3;"))
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = req;
+                command.CommandText = cmd.ToString();
 
                 connection.Open();
-                var reader = command.ExecuteReader();
 
+                var id = Convert.ToInt32(command.ExecuteScalar());
+
+                connection.Close();
+
+                return id;
+            }
+        }
+
+        private IDictionary<string, object> GetItem(string tableName, int id, IEnumerable<string> fields)
+        {
+            var cmd = new StringBuilder();
+            cmd.AppendLine($@"SELECT {string.Join(",", fields)}");
+            cmd.AppendLine($@"FROM {tableName}");
+            cmd.AppendLine($@"WHERE {Item.IdField} = {id}");
+            cmd.AppendLine($@"LIMIT 1;");
+
+            using (var connection = new SQLiteConnection($@"Data Source={_dbFileName}; Version=3;"))
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = cmd.ToString();
+                connection.Open();
+                var reader = command.ExecuteReader();
                 var values = new Dictionary<string, object>();
 
                 if (reader.Read())
@@ -410,71 +369,162 @@ namespace NetAudioPlayer.ConsoleServer.Components.DAL
                 }
 
                 connection.Close();
-
                 return values;
             }
         }
 
+        private IList<IDictionary<string, object>> GetItems(string tableName, List<string> fields, string where)
+        {
+            var cmd = new StringBuilder();
+            cmd.AppendLine($@"SELECT {string.Join(",", fields)}");
+            cmd.AppendLine($@"FROM {tableName}");
+            cmd.AppendLine($@"WHERE {where};");
+
+            using (var connection = new SQLiteConnection($@"Data Source={_dbFileName}; Version=3;"))
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = cmd.ToString();
+                connection.Open();
+
+                var reader = command.ExecuteReader();
+                var items = new List<IDictionary<string, object>>();
+
+                while (reader.Read())
+                {
+                    var values = new Dictionary<string, object>();
+
+                    foreach (var key in fields)
+                    {
+                        values.Add(key, reader[key]);
+                    }
+
+                    items.Add(values);
+                }
+
+                connection.Close();
+                return items;
+            }
+        }
+
+        private void UpdateItem(string tableName, int id, IDictionary<string, object> values)
+        {
+            var cmd = new StringBuilder();
+            cmd.AppendLine($@"UPDATE {tableName}");
+            cmd.AppendLine($@"SET {string.Join(",", values.Select(p => $@"{p.Key} = {ToSqlString(p.Value)}"))}");
+            cmd.AppendLine($@"WHERE {Item.IdField} = {id}");
+
+            using (var connection = new SQLiteConnection($@"Data Source={_dbFileName}; Version=3;"))
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = cmd.ToString();
+
+                connection.Open();
+
+                command.ExecuteNonQuery();
+
+                connection.Close();
+            }
+        }
+
+        private void DeleteItem(string tableName, int id)
+        {
+            var cmd = new StringBuilder();
+            cmd.AppendLine($@"DELETE FROM {tableName}");
+            cmd.AppendLine($@"WHERE {Item.IdField} = {id}");
+
+            using (var connection = new SQLiteConnection($@"Data Source={_dbFileName}; Version=3;"))
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = cmd.ToString();
+
+                connection.Open();
+
+                command.ExecuteNonQuery();
+
+                connection.Close();
+            }
+        }
+
+
+        private string ToSqlString(object obj)
+        {
+            if (obj is string)
+            {
+                return $"'{obj}'";
+            }
+
+            return obj.ToString();
+        }
+
         private void CreateDb()
         {
-            ExecuteNonQuery($@"
-CREATE TABLE [{GenreTable}] (
-  [{Genre.IdField}]     INTEGER     NOT NULL UNIQUE, 
-  [{Genre.NameField}]   VARCHAR(64) NOT NULL UNIQUE, 
-  [{Genre.RatingField}] INTEGER     NOT NULL DEFAULT 0, 
-  [{Genre.TagField}]    VARCHAR(64), 
-  PRIMARY KEY ([{Genre.IdField}])
-);");
+            var cmd = new StringBuilder();
+            cmd.AppendLine($@"CREATE TABLE [{GenreTable}] ("                            );
+            cmd.AppendLine($@"  [{Genre.IdField}]     INTEGER     NOT NULL UNIQUE,"    );
+            cmd.AppendLine($@"  [{Genre.NameField}]   VARCHAR(64) NOT NULL UNIQUE,"    );
+            cmd.AppendLine($@"  [{Genre.RatingField}] INTEGER     NOT NULL DEFAULT 0," );
+            cmd.AppendLine($@"  [{Genre.TagField}]    VARCHAR(64),"                    );
+            cmd.AppendLine($@"  PRIMARY KEY ([{Genre.IdField}]));"                      );
 
-            ExecuteNonQuery($@"
-CREATE TABLE [{ArtistTable}] (
-  [{Artist.IdField}]            INTEGER     NOT NULL UNIQUE, 
-  [{Artist.NameField}]          VARCHAR(64) NOT NULL UNIQUE, 
-  [{Artist.AlbumsCountField}]   INTEGER     NOT NULL DEFAULT 0, 
-  [{Artist.TracksCountField}]   INTEGER     NOT NULL DEFAULT 0, 
-  [{Artist.RatingField}]        INTEGER     NOT NULL DEFAULT 0, 
-  [{Artist.TagField}]           VARCHAR(64),  
-  PRIMARY KEY  ([{Artist.IdField}])
-);");
+            cmd.AppendLine($@"CREATE TABLE [{ArtistTable}] (");
+            cmd.AppendLine($@"  [{Artist.IdField}]            INTEGER     NOT NULL UNIQUE,");
+            cmd.AppendLine($@"  [{Artist.NameField}]          VARCHAR(64) NOT NULL UNIQUE,");
+            cmd.AppendLine($@"  [{Artist.AlbumsCountField}]   INTEGER     NOT NULL DEFAULT 0,");
+            cmd.AppendLine($@"  [{Artist.TracksCountField}]   INTEGER     NOT NULL DEFAULT 0,");
+            cmd.AppendLine($@"  [{Artist.RatingField}]        INTEGER     NOT NULL DEFAULT 0,");
+            cmd.AppendLine($@"  [{Artist.TagField}]           VARCHAR(64),");
+            cmd.AppendLine($@"  PRIMARY KEY  ([{Artist.IdField}]));");
 
-            ExecuteNonQuery($@"
-CREATE TABLE [{AlbumTable}] (
-  [{Album.IdField}]                INTEGER          NOT NULL UNIQUE, 
-  [{Album.NameField}]             VARCHAR(64)  NOT NULL UNIQUE, 
-  [{Album.ArtistIdField}]          INTEGER          NOT NULL DEFAULT 0, 
-  [{Album.YearField}]              INTEGER          NOT NULL DEFAULT 1900, 
-  [{Album.TracksCountField}]        INTEGER          NOT NULL DEFAULT 0, 
-  [{Album.RatingField}]            INTEGER          NOT NULL DEFAULT 0, 
-  [{Album.TagField}]              VARCHAR(64), 
-  PRIMARY KEY ([{Album.IdField}]),
-  FOREIGN KEY ([{Album.ArtistIdField}]) REFERENCES [{ArtistTable}]([{Artist.IdField}]) 
-             ON DELETE SET DEFAULT
-);");
+            cmd.AppendLine($@"CREATE TABLE [{AlbumTable}] (");
+            cmd.AppendLine($@"  [{Album.IdField}]                INTEGER          NOT NULL UNIQUE,");
+            cmd.AppendLine($@"  [{Album.NameField}]             VARCHAR(64)  NOT NULL UNIQUE,");
+            cmd.AppendLine($@"  [{Album.ArtistIdField}]          INTEGER          NOT NULL DEFAULT 0,");
+            cmd.AppendLine($@"  [{Album.YearField}]              INTEGER          NOT NULL DEFAULT 1900,");
+            cmd.AppendLine($@"  [{Album.TracksCountField}]        INTEGER          NOT NULL DEFAULT 0, ");
+            cmd.AppendLine($@"  [{Album.RatingField}]            INTEGER          NOT NULL DEFAULT 0, ");
+            cmd.AppendLine($@"  [{Album.TagField}]              VARCHAR(64), ");
+            cmd.AppendLine($@"  PRIMARY KEY ([{Album.IdField}]),");
+            cmd.AppendLine($@"  FOREIGN KEY ([{Album.ArtistIdField}]) ");
+            cmd.AppendLine($@"    REFERENCES [{ArtistTable}]([{Artist.IdField}]) ON DELETE SET DEFAULT);");
 
-            ExecuteNonQuery($@"
-CREATE TABLE [{TrackTable}] (
-  [{Track.IdField}]                INTEGER          NOT NULL UNIQUE, 
-  [{Track.NameField}]             VARCHAR(64)  NOT NULL UNIQUE, 
-  [{Track.ArtistIdField}]          INTEGER          NOT NULL DEFAULT 0, 
-  [{Track.AlbumIdField}]           INTEGER          NOT NULL DEFAULT 0,
-  [{Track.GenreIdField}]           INTEGER          NOT NULL DEFAULT 0,
-  [{Track.DurationField}]          INTEGER          NOT NULL DEFAULT 0,
-  [{Track.UriField}]              VARCHAR      NOT NULL UNIQUE,
-  [{Track.RatingField}]            INTEGER          NOT NULL DEFAULT 0, 
-  [{Track.TagField}]              VARCHAR(64), 
-  PRIMARY KEY ([{Track.IdField}]),
-  FOREIGN KEY ([{Track.ArtistIdField}]) REFERENCES [{ArtistTable}]([{Artist.IdField}]) ON DELETE SET DEFAULT,
-  FOREIGN KEY ([{Track.AlbumIdField}]) REFERENCES [{AlbumTable}]([{Album.IdField}]) ON DELETE SET DEFAULT
-  FOREIGN KEY ([{Track.GenreIdField}]) REFERENCES [{GenreTable}]([{Genre.IdField}]) ON DELETE SET DEFAULT
-);");
-            ExecuteNonQuery($@"
-INSERT INTO [{GenreTable}]  ({Genre.IdField}, {Genre.NameField}, {Genre.TagField}) 
-    VALUES ({Genre.DefaultId}, 'Unknown genre', 'default');
-INSERT INTO [{ArtistTable}] ({Artist.IdField}, {Artist.NameField}, {Artist.TagField}) 
-    VALUES ({Artist.DefaultId}, 'Unknown artist', 'default');
-INSERT INTO [{AlbumTable}]  ({Album.IdField}, {Album.NameField}, {Album.ArtistIdField}, {Album.TagField}) 
-    VALUES ({Album.DefaultId}, 'Unknown album', 0, 'default');
-");
+            cmd.AppendLine($@"CREATE TABLE [{TrackTable}] (");
+            cmd.AppendLine($@"  [{Track.IdField}]                INTEGER          NOT NULL UNIQUE,");
+            cmd.AppendLine($@"  [{Track.NameField}]             VARCHAR(64)  NOT NULL UNIQUE, ");
+            cmd.AppendLine($@"  [{Track.ArtistIdField}]          INTEGER          NOT NULL DEFAULT 0, ");
+            cmd.AppendLine($@"  [{Track.AlbumIdField}]           INTEGER          NOT NULL DEFAULT 0,");
+            cmd.AppendLine($@"  [{Track.GenreIdField}]           INTEGER          NOT NULL DEFAULT 0,");
+            cmd.AppendLine($@"  [{Track.DurationField}]          INTEGER          NOT NULL DEFAULT 0,");
+            cmd.AppendLine($@"  [{Track.UriField}]              VARCHAR      NOT NULL UNIQUE,");
+            cmd.AppendLine($@"  [{Track.RatingField}]            INTEGER          NOT NULL DEFAULT 0, ");
+            cmd.AppendLine($@"  [{Track.TagField}]              VARCHAR(64),");
+            cmd.AppendLine($@"  PRIMARY KEY ([{Track.IdField}]),");
+            cmd.AppendLine($@"  FOREIGN KEY ([{Track.ArtistIdField}]) ");
+            cmd.AppendLine($@"    REFERENCES [{ArtistTable}]([{Artist.IdField}]) ON DELETE SET DEFAULT,");
+            cmd.AppendLine($@"  FOREIGN KEY ([{Track.AlbumIdField}])");
+            cmd.AppendLine($@"    REFERENCES [{AlbumTable}]([{Album.IdField}]) ON DELETE SET DEFAULT,");
+            cmd.AppendLine($@"  FOREIGN KEY ([{Track.GenreIdField}]) ");
+            cmd.AppendLine($@"    REFERENCES [{GenreTable}]([{Genre.IdField}]) ON DELETE SET DEFAULT);");
+
+            cmd.AppendLine($@"INSERT INTO [{GenreTable}]  ({Genre.IdField}, {Genre.NameField}, {Genre.TagField}) ");
+            cmd.AppendLine($@"    VALUES ({Genre.DefaultId}, 'Unknown genre', 'default');");
+
+            cmd.AppendLine($@"INSERT INTO [{ArtistTable}] ({Artist.IdField}, {Artist.NameField}, {Artist.TagField})");
+            cmd.AppendLine($@"    VALUES ({Artist.DefaultId}, 'Unknown artist', 'default');");
+
+            cmd.AppendLine($@"INSERT INTO [{AlbumTable}] ({Album.IdField}, {Album.NameField}, {Album.ArtistIdField}, {Album.TagField}) ");
+            cmd.AppendLine($@"    VALUES ({Album.DefaultId}, 'Unknown album', 0, 'default');");
+
+            using (var connection = new SQLiteConnection($@"Data Source={_dbFileName}; Version=3;"))
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = cmd.ToString();
+
+                connection.Open();
+
+                command.ExecuteNonQuery();
+
+                connection.Close();
+            }
 
         }
 
