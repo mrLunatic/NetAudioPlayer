@@ -86,6 +86,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\DAL\DalExtension.cs" />
     <Compile Include="Components\LocalizationService.cs" />
     <Compile Include="Components\NAudioEngine.cs" />
     <Compile Include="Components\DAL\SqliteDal.cs" />

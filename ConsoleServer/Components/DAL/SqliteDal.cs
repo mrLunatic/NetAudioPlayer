@@ -6,6 +6,7 @@ using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using System.Net.Configuration;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Text;
 using NetAudioPlayer.Core.Components.DAL;
 using NetAudioPlayer.Core.Data;
@@ -14,6 +15,8 @@ namespace NetAudioPlayer.ConsoleServer.Components.DAL
 {
     public sealed class SqliteDal : IDal
     {
+        #region Consts
+
         private const string ArtistTable = @"artist";
 
         private const string AlbumTable = @"album";
@@ -22,9 +25,60 @@ namespace NetAudioPlayer.ConsoleServer.Components.DAL
 
         private const string TrackTable = @"track";
 
+        #endregion
+
+        #region Fields
 
         private readonly string _dbFileName;
-        
+
+        private static readonly string[] TrackFields =
+        {
+            Track.IdField,
+            Track.NameField,
+            Track.ArtistIdField,
+            Track.ArtistNameField,
+            Track.AlbumIdField,
+            Track.AlbumNameField,
+            Track.AlbumNumberField,
+            Track.GenreIdField,
+            Track.GenreNameField,
+            Track.DurationField,
+            Track.UriField,
+            Track.RatingField,
+            Track.TagField
+        };
+
+        private static readonly string[] ArtistFields =
+        {
+            Artist.IdField,
+            Artist.NameField,
+            Artist.AlbumsCountField,
+            Artist.TracksCountField,
+            Artist.RatingField,
+            Artist.TagField
+        };
+
+        private static readonly string[] AlbumFields =
+        {
+            Album.IdField,
+            Album.NameField,
+            Album.ArtistIdField,
+            Album.ArtistNameField,
+            Album.YearField,
+            Album.TracksCountField
+        };
+
+        private static readonly string[] GenreFields =
+        {
+            Genre.IdField,
+            Genre.NameField,
+            Genre.RatingField,
+            Genre.TagField
+        };
+
+        #endregion
+
+
         public SqliteDal(string dbFileName)
         {
             _dbFileName = dbFileName;
@@ -59,38 +113,22 @@ namespace NetAudioPlayer.ConsoleServer.Components.DAL
 
         public Track GetTrack(int id)
         {
-            var p = GetItem(
-                TrackTable,
-                id,
-                new[]
-                {
-                    Track.NameField,
-                    Track.ArtistIdField,
-                    Track.AlbumIdField,
-                    Track.AlbumNumberField,
-                    Track.GenreIdField,
-                    Track.DurationField,
-                    Track.UriField,
-                    Track.TagField
-                });
-
-            throw new NotImplementedException();
-
+            return GetItem(TrackTable, id, TrackFields).GetTrack();
         }
 
         public IEnumerable<Track> GetTracks(TrackRequestParameters parameters)
         {
-            throw new NotImplementedException();
+            return GetItems(TrackTable, TrackFields, parameters.GetWhere()).Select(p => p.GetTrack());
         }
 
         public bool UpdateTrack(int id, TrackUpdateParameters parameters)
         {
-            throw new NotImplementedException();
+            return UpdateItem(TrackTable, id, parameters.GetParams());
         }
 
         public bool DeleteTrack(int id)
         {
-            throw new NotImplementedException();
+            return DeleteItem(TrackTable, id);
         }
 
         #endregion
@@ -99,27 +137,33 @@ namespace NetAudioPlayer.ConsoleServer.Components.DAL
 
         public int CreateArtist(string name, string tag)
         {
-            throw new NotImplementedException();
+            return CreateItem(
+                ArtistTable,
+                new Dictionary<string, object>()
+                {
+                    { Artist.NameField, name},
+                    { Artist.TagField, tag}
+                });
         }
 
         public Artist GetArtist(int id)
         {
-            throw new NotImplementedException();
+            return GetItem(ArtistTable, id, ArtistFields).GetArtist();
         }
 
         public IEnumerable<Artist> GetArtists(ArtistRequestParameters parameters)
         {
-            throw new NotImplementedException();
+            return GetItems(ArtistTable, ArtistFields, parameters.GetWhere()).Select(p => p.GetArtist());
         }
 
         public bool UpdateArtist(int id, ArtistUpdateParameters parameters)
         {
-            throw new NotImplementedException();
+            return UpdateItem(ArtistTable, id, parameters.GetParams());
         }
 
         public bool DeleteArtist(int id)
         {
-            throw new NotImplementedException();
+            return DeleteItem(ArtistTable, id);
         }
 
         #endregion
@@ -128,27 +172,35 @@ namespace NetAudioPlayer.ConsoleServer.Components.DAL
 
         public int CreateAlbum(string name, int artistId, int year, string tag)
         {
-            throw new NotImplementedException();
+            return CreateItem(
+                AlbumTable,
+                new Dictionary<string, object>()
+                {
+                    { Album.NameField, name},
+                    { Album.ArtistIdField, artistId},
+                    { Album.YearField, year},
+                    { Album.TagField, tag}
+                });
         }
 
         public Album GetAlbum(int id)
         {
-            throw new NotImplementedException();
+            return GetItem(AlbumTable, id, AlbumFields).GetAlbum();
         }
 
         public IEnumerable<Album> GetAlbums(AlbumRequestParameters parameters)
         {
-            throw new NotImplementedException();
+            return GetItems(AlbumTable, AlbumFields, parameters.GetWhere()).Select(p => p.GetAlbum());
         }
 
         public bool UpdateAlbum(int id, AlbumUpdateParameters parameters)
         {
-            throw new NotImplementedException();
+            return UpdateItem(AlbumTable, id, parameters.GetParams());
         }
 
         public bool DeleteAlbum(int id)
         {
-            throw new NotImplementedException();
+            return DeleteItem(AlbumTable, id);
         }
 
         #endregion
@@ -167,63 +219,23 @@ namespace NetAudioPlayer.ConsoleServer.Components.DAL
         }
 
         public Genre GetGenre(int id)
-        {   
-            var p = GetItem(
-                GenreTable, 
-                id,
-                new List<string> { Genre.IdField, Genre.NameField, Genre.RatingField, Genre.TagField });
-
-            return new Genre
-            {
-                Id = Convert.ToInt32(p[Genre.IdField]),
-                Name = Convert.ToString(p[Genre.NameField]),
-                Rating = Convert.ToInt32(p[Genre.RatingField]),
-                Tag = Convert.ToString(p[Genre.TagField])
-            };
+        {
+            return GetItem(GenreTable, id, GenreFields).GetGenre();
         }
 
         public IEnumerable<Genre> GetGenres(GenreRequestParameters parameters)
         {
-            var items = GetItems(
-                    GenreTable, 
-                    new List<string> { Genre.IdField, Genre.NameField, Genre.RatingField, Genre.TagField }, 
-                    GetCommonWhere(parameters));
-
-            return items.Select(p => 
-                new Genre
-                {
-                    Id = Convert.ToInt32(p[Genre.IdField]),
-                    Name = Convert.ToString(p[Genre.NameField]),
-                    Rating = Convert.ToInt32(p[Genre.RatingField]),
-                    Tag = Convert.ToString(p[Genre.TagField])
-                }); 
+            return GetItems(GenreTable, GenreFields, parameters.GetWhere()).Select(p => p.GetGenre());
         }
                          
         public bool UpdateGenre(int id, GenreUpdateParameters parameters)
         {
-            if (!Exists(GenreTable, id))
-            {
-                return false;
-            }
-
-            UpdateItem(
-                GenreTable,
-                id,
-                GetGenreUpdateItems(parameters));
-
-            return true;
+            return UpdateItem(GenreTable, id, parameters.GetParams());
         }
 
         public bool DeleteGenre(int id)
         {
-            if (!Exists(GenreTable, id))
-            {
-                return false;
-            }
-
-            DeleteItem(GenreTable, id);
-
-            return true;
+            return DeleteItem(GenreTable, id);
         }
 
         #endregion
@@ -231,76 +243,9 @@ namespace NetAudioPlayer.ConsoleServer.Components.DAL
         #endregion
 
         #region Private methods
- 
-        private static IDictionary<string, object> GetCommonUpdateItems(CommonUpdateParameters parameters)
-        {
-            var items = new Dictionary<string, object>();
-
-            if (parameters.Name != null)
-            {
-                items.Add(Item.NameField, parameters.Name);
-            }
-
-            if (parameters.Rating.HasValue)
-            {
-                items.Add(Item.RatingField, parameters.Rating.Value);
-            }
-
-            if (parameters.Tag != null)
-            {
-                items.Add(Item.TagField, parameters.Tag);
-            }
-            return items;
-        }
-        private static IDictionary<string, object> GetGenreUpdateItems(GenreUpdateParameters parameters)
-        {
-            return GetCommonUpdateItems(parameters);
-        } 
 
 
 
-        private static string GetCommonWhere(CommonRequestParameters p)
-        {
-            var where = new StringBuilder("1 = 1 ");
-
-            if (p.Ids != null)
-            {
-                where.Append($@"AND {Item.IdField} IN ({string.Join(",", p.Ids)}) ");
-            }
-
-            if (!string.IsNullOrEmpty(p.Name))
-            {
-                where.Append($@"AND {Item.NameField} LIKE '%{p.Name}%' ");
-            }
-
-            if (!string.IsNullOrEmpty(p.Tag))
-            {
-                where.Append($@"AND {Item.TagField} LIKE '%{p.Tag}%' ");
-            }
-
-            if (p.RatingMin.HasValue)
-            {
-                where.Append($@"AND {Item.RatingField} >= {p.RatingMin} ");
-            }
-
-            if (p.RatingMax.HasValue)
-            {
-                where.Append($@"AND {Item.RatingField} <= {p.RatingMax} ");
-            }
-
-            if (p.Rating.HasValue)
-            {
-                where.Append($@"AND {Item.RatingField} = {p.Rating} ");
-            }
-
-            if (p.Offset.HasValue)
-            {
-                where.Append($@"AND {Item.IdField} > {p.Offset}");
-            }
-
-            return where.ToString();
-        } 
-      
 
 
         private bool Exists(string tableName, int id)
@@ -326,7 +271,7 @@ namespace NetAudioPlayer.ConsoleServer.Components.DAL
         {
             var cmd = new StringBuilder();
             cmd.AppendLine($@"INSERT INTO {tableName} ({string.Join(",", items.Keys)})");
-            cmd.AppendLine($@"VALUES ({string.Join(",", items.Values.Select(ToSqlString))});");
+            cmd.AppendLine($@"VALUES ({string.Join(",", items.Values.Select(p => p.AsSqlString()))});");
             cmd.AppendLine($@"SELECT last_insert_rowid();");
 
             using (var connection = new SQLiteConnection($@"Data Source={_dbFileName}; Version=3;"))
@@ -373,7 +318,7 @@ namespace NetAudioPlayer.ConsoleServer.Components.DAL
             }
         }
 
-        private IList<IDictionary<string, object>> GetItems(string tableName, List<string> fields, string where)
+        private IList<IDictionary<string, object>> GetItems(string tableName, IEnumerable<string> fields, string where)
         {
             var cmd = new StringBuilder();
             cmd.AppendLine($@"SELECT {string.Join(",", fields)}");
@@ -406,11 +351,14 @@ namespace NetAudioPlayer.ConsoleServer.Components.DAL
             }
         }
 
-        private void UpdateItem(string tableName, int id, IDictionary<string, object> values)
+        private bool UpdateItem(string tableName, int id, IDictionary<string, object> values)
         {
+            if (!Exists(tableName, id))
+                return false;
+
             var cmd = new StringBuilder();
             cmd.AppendLine($@"UPDATE {tableName}");
-            cmd.AppendLine($@"SET {string.Join(",", values.Select(p => $@"{p.Key} = {ToSqlString(p.Value)}"))}");
+            cmd.AppendLine($@"SET {string.Join(",", values.Select(p => $@"{p.Key} = {p.Value.AsSqlString()}"))}");
             cmd.AppendLine($@"WHERE {Item.IdField} = {id}");
 
             using (var connection = new SQLiteConnection($@"Data Source={_dbFileName}; Version=3;"))
@@ -424,10 +372,15 @@ namespace NetAudioPlayer.ConsoleServer.Components.DAL
 
                 connection.Close();
             }
+
+            return true;
         }
 
-        private void DeleteItem(string tableName, int id)
+        private bool DeleteItem(string tableName, int id)
         {
+            if (!Exists(tableName, id))
+                return false;
+
             var cmd = new StringBuilder();
             cmd.AppendLine($@"DELETE FROM {tableName}");
             cmd.AppendLine($@"WHERE {Item.IdField} = {id}");
@@ -443,18 +396,10 @@ namespace NetAudioPlayer.ConsoleServer.Components.DAL
 
                 connection.Close();
             }
+
+            return true;
         }
 
-
-        private string ToSqlString(object obj)
-        {
-            if (obj is string)
-            {
-                return $"'{obj}'";
-            }
-
-            return obj.ToString();
-        }
 
         private void CreateDb()
         {

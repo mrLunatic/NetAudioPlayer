@@ -1,4 +1,5 @@
-﻿using NetAudioPlayer.Core.Model;
+﻿using System.Collections.Generic;
+using NetAudioPlayer.Core.Model;
 using Newtonsoft.Json;
 
 namespace NetAudioPlayer.Core.Data
@@ -9,6 +10,8 @@ namespace NetAudioPlayer.Core.Data
     public class Album : Item
     {
         public const string ArtistIdField = @"artistId";
+
+        public const string ArtistNameField = @"artistName";
 
         public const string YearField = @"year";
 
@@ -21,6 +24,12 @@ namespace NetAudioPlayer.Core.Data
         /// </summary>
         [JsonProperty(ArtistIdField)]
         public int ArtistId { get; set; }
+
+        /// <summary>
+        /// Имя исполнителя альбома
+        /// </summary>
+        [JsonProperty(ArtistNameField)]
+        public string ArtistName { get; set; }
 
         /// <summary>
         /// Год выпуска альбома

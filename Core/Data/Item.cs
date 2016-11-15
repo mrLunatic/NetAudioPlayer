@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace NetAudioPlayer.Core.Data
 {
@@ -18,7 +19,6 @@ namespace NetAudioPlayer.Core.Data
         public const string TagField = @"tag";
 
         #endregion
-
 
         /// <summary>
         /// Уникальный идентификатор 

@@ -17,7 +17,7 @@ namespace NetAudioPlayer.Core.Data
 
         public const string AlbumNumberField = @"albumNumber";
 
-        public const string AlbumNameField = @"albumNameField";
+        public const string AlbumNameField = @"albumName";
 
         public const string GenreIdField = @"genreId";
 
@@ -67,7 +67,7 @@ namespace NetAudioPlayer.Core.Data
         /// Название жанра
         /// </summary>
         [JsonProperty(GenreNameField)]
-        public int GenreName { get; set; }
+        public string GenreName { get; set; }
 
         /// <summary>
         /// Длительность композиции
