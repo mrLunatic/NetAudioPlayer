@@ -10,7 +10,7 @@ namespace NetAudioPlayer.Core.Data
     {
         public const string AlbumsCountField = @"albumsCount";
 
-        public const string TracksCountField = @"tracksCountField";
+        public const string TracksCountField = @"tracksCount";
 
         public const int DefaultId = 0;
 

@@ -13,17 +13,17 @@ using NetAudioPlayer.Core.Data;
 
 namespace NetAudioPlayer.ConsoleServer.Components.DAL
 {
-    public sealed class SqliteDal : IDal
+    public sealed partial class SqliteDal : IDal
     {
         #region Consts
 
-        private const string ArtistTable = @"artist";
+        public const string ArtistTable = @"artist";
 
-        private const string AlbumTable = @"album";
+        public const string AlbumTable = @"album";
 
-        private const string GenreTable = @"genre";
+        public const string GenreTable = @"genre";
 
-        private const string TrackTable = @"track";
+        public const string TrackTable = @"track";
 
         #endregion
 
@@ -403,66 +403,10 @@ namespace NetAudioPlayer.ConsoleServer.Components.DAL
 
         private void CreateDb()
         {
-            var cmd = new StringBuilder();
-            cmd.AppendLine($@"CREATE TABLE [{GenreTable}] ("                            );
-            cmd.AppendLine($@"  [{Genre.IdField}]     INTEGER     NOT NULL UNIQUE,"    );
-            cmd.AppendLine($@"  [{Genre.NameField}]   VARCHAR(64) NOT NULL UNIQUE,"    );
-            cmd.AppendLine($@"  [{Genre.RatingField}] INTEGER     NOT NULL DEFAULT 0," );
-            cmd.AppendLine($@"  [{Genre.TagField}]    VARCHAR(64),"                    );
-            cmd.AppendLine($@"  PRIMARY KEY ([{Genre.IdField}]));"                      );
-
-            cmd.AppendLine($@"CREATE TABLE [{ArtistTable}] (");
-            cmd.AppendLine($@"  [{Artist.IdField}]            INTEGER     NOT NULL UNIQUE,");
-            cmd.AppendLine($@"  [{Artist.NameField}]          VARCHAR(64) NOT NULL UNIQUE,");
-            cmd.AppendLine($@"  [{Artist.AlbumsCountField}]   INTEGER     NOT NULL DEFAULT 0,");
-            cmd.AppendLine($@"  [{Artist.TracksCountField}]   INTEGER     NOT NULL DEFAULT 0,");
-            cmd.AppendLine($@"  [{Artist.RatingField}]        INTEGER     NOT NULL DEFAULT 0,");
-            cmd.AppendLine($@"  [{Artist.TagField}]           VARCHAR(64),");
-            cmd.AppendLine($@"  PRIMARY KEY  ([{Artist.IdField}]));");
-
-            cmd.AppendLine($@"CREATE TABLE [{AlbumTable}] (");
-            cmd.AppendLine($@"  [{Album.IdField}]                INTEGER          NOT NULL UNIQUE,");
-            cmd.AppendLine($@"  [{Album.NameField}]             VARCHAR(64)  NOT NULL UNIQUE,");
-            cmd.AppendLine($@"  [{Album.ArtistIdField}]          INTEGER          NOT NULL DEFAULT 0,");
-            cmd.AppendLine($@"  [{Album.YearField}]              INTEGER          NOT NULL DEFAULT 1900,");
-            cmd.AppendLine($@"  [{Album.TracksCountField}]        INTEGER          NOT NULL DEFAULT 0, ");
-            cmd.AppendLine($@"  [{Album.RatingField}]            INTEGER          NOT NULL DEFAULT 0, ");
-            cmd.AppendLine($@"  [{Album.TagField}]              VARCHAR(64), ");
-            cmd.AppendLine($@"  PRIMARY KEY ([{Album.IdField}]),");
-            cmd.AppendLine($@"  FOREIGN KEY ([{Album.ArtistIdField}]) ");
-            cmd.AppendLine($@"    REFERENCES [{ArtistTable}]([{Artist.IdField}]) ON DELETE SET DEFAULT);");
-
-            cmd.AppendLine($@"CREATE TABLE [{TrackTable}] (");
-            cmd.AppendLine($@"  [{Track.IdField}]                INTEGER          NOT NULL UNIQUE,");
-            cmd.AppendLine($@"  [{Track.NameField}]             VARCHAR(64)  NOT NULL UNIQUE, ");
-            cmd.AppendLine($@"  [{Track.ArtistIdField}]          INTEGER          NOT NULL DEFAULT 0, ");
-            cmd.AppendLine($@"  [{Track.AlbumIdField}]           INTEGER          NOT NULL DEFAULT 0,");
-            cmd.AppendLine($@"  [{Track.GenreIdField}]           INTEGER          NOT NULL DEFAULT 0,");
-            cmd.AppendLine($@"  [{Track.DurationField}]          INTEGER          NOT NULL DEFAULT 0,");
-            cmd.AppendLine($@"  [{Track.UriField}]              VARCHAR      NOT NULL UNIQUE,");
-            cmd.AppendLine($@"  [{Track.RatingField}]            INTEGER          NOT NULL DEFAULT 0, ");
-            cmd.AppendLine($@"  [{Track.TagField}]              VARCHAR(64),");
-            cmd.AppendLine($@"  PRIMARY KEY ([{Track.IdField}]),");
-            cmd.AppendLine($@"  FOREIGN KEY ([{Track.ArtistIdField}]) ");
-            cmd.AppendLine($@"    REFERENCES [{ArtistTable}]([{Artist.IdField}]) ON DELETE SET DEFAULT,");
-            cmd.AppendLine($@"  FOREIGN KEY ([{Track.AlbumIdField}])");
-            cmd.AppendLine($@"    REFERENCES [{AlbumTable}]([{Album.IdField}]) ON DELETE SET DEFAULT,");
-            cmd.AppendLine($@"  FOREIGN KEY ([{Track.GenreIdField}]) ");
-            cmd.AppendLine($@"    REFERENCES [{GenreTable}]([{Genre.IdField}]) ON DELETE SET DEFAULT);");
-
-            cmd.AppendLine($@"INSERT INTO [{GenreTable}]  ({Genre.IdField}, {Genre.NameField}, {Genre.TagField}) ");
-            cmd.AppendLine($@"    VALUES ({Genre.DefaultId}, 'Unknown genre', 'default');");
-
-            cmd.AppendLine($@"INSERT INTO [{ArtistTable}] ({Artist.IdField}, {Artist.NameField}, {Artist.TagField})");
-            cmd.AppendLine($@"    VALUES ({Artist.DefaultId}, 'Unknown artist', 'default');");
-
-            cmd.AppendLine($@"INSERT INTO [{AlbumTable}] ({Album.IdField}, {Album.NameField}, {Album.ArtistIdField}, {Album.TagField}) ");
-            cmd.AppendLine($@"    VALUES ({Album.DefaultId}, 'Unknown album', 0, 'default');");
-
             using (var connection = new SQLiteConnection($@"Data Source={_dbFileName}; Version=3;"))
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = cmd.ToString();
+                command.CommandText = DbScript;
 
                 connection.Open();
 
