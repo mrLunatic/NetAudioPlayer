@@ -1,0 +1,21 @@
+{
+  "version": "1.0.0-*",
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50",
+      "dependencies": {
+        "NETStandard.Library": "1.6.1",
+        "Newtonsoft.Json": "9.0.2-beta1"
+      }
+    },
+    "net452": {
+      "dependencies": {
+      }
+    }
+  },
+  "dependencies": {
+    "BASS": "2.4.12.1",
+    "Common": "1.0.0-*",
+    "SQLite": "3.13.0"
+  }
+}

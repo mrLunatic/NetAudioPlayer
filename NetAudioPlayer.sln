@@ -15,6 +15,21 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetAudioPlayer.ConsoleServe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetAudioPlayer.WebApi", "NetAudioPlayer.WebApi\NetAudioPlayer.WebApi.csproj", "{A2648B86-5B2E-4EE0-B381-1A89FD744D50}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{637A9B5B-0F89-4990-9CDF-AAD84CF1D406}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{E49F4AD4-E59A-41B0-BC5B-EE7F7B37036E}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Common", "Common\Common\Common.xproj", "{B1EF3497-00C2-4BD1-B64E-D93DB264A087}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6D04E567-44A2-4A27-95C6-628F4F9A4A5D}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+	EndProjectSection
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ServerCore", "Server\ServerCore\ServerCore.xproj", "{52A40042-9282-426B-A06E-27A3560A56B0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerApp", "ServerApp\ServerApp.csproj", "{A508FE5F-5DF5-4B45-B9D7-5C38102CB3A0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,11 +56,26 @@ Global
 		{A2648B86-5B2E-4EE0-B381-1A89FD744D50}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2648B86-5B2E-4EE0-B381-1A89FD744D50}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2648B86-5B2E-4EE0-B381-1A89FD744D50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1EF3497-00C2-4BD1-B64E-D93DB264A087}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1EF3497-00C2-4BD1-B64E-D93DB264A087}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1EF3497-00C2-4BD1-B64E-D93DB264A087}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1EF3497-00C2-4BD1-B64E-D93DB264A087}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52A40042-9282-426B-A06E-27A3560A56B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52A40042-9282-426B-A06E-27A3560A56B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52A40042-9282-426B-A06E-27A3560A56B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52A40042-9282-426B-A06E-27A3560A56B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A508FE5F-5DF5-4B45-B9D7-5C38102CB3A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A508FE5F-5DF5-4B45-B9D7-5C38102CB3A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A508FE5F-5DF5-4B45-B9D7-5C38102CB3A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A508FE5F-5DF5-4B45-B9D7-5C38102CB3A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{73E3022B-4FAE-404D-BFD9-8B686B386940} = {B53911E4-6D5C-4398-B0CF-BCCD5D9D9C1A}
+		{B1EF3497-00C2-4BD1-B64E-D93DB264A087} = {E49F4AD4-E59A-41B0-BC5B-EE7F7B37036E}
+		{52A40042-9282-426B-A06E-27A3560A56B0} = {637A9B5B-0F89-4990-9CDF-AAD84CF1D406}
+		{A508FE5F-5DF5-4B45-B9D7-5C38102CB3A0} = {637A9B5B-0F89-4990-9CDF-AAD84CF1D406}
 	EndGlobalSection
 EndGlobal

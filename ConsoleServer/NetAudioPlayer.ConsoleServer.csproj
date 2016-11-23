@@ -102,10 +102,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\NetAudioPlayer.Core.csproj">
-      <Project>{b3dc83fe-e0a2-4fcb-9a29-78c6fdb5d01c}</Project>
-      <Name>NetAudioPlayer.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NetAudioPlayer.WebApi\NetAudioPlayer.WebApi.csproj">
       <Project>{a2648b86-5b2e-4ee0-b381-1a89fd744d50}</Project>
       <Name>NetAudioPlayer.WebApi</Name>

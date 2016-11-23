@@ -18,7 +18,7 @@ CREATE TABLE [{GenreTable}]
   [{Genre.RatingField}]         INTEGER         NOT NULL DEFAULT 0,
   [{Genre.TagField}]            VARCHAR(64),
 
-  PRIMARY KEY ([{Genre.IdField}])
+  PRIMARY KEY ([{Genre.IdField}])                       C:\Users\Дмитрий\Source\Repos\NetAudioPlayer\ConsoleServer\Components\DAL\DbCreateString.cs
 );
 
 CREATE TABLE [{ArtistTable}] 

@@ -257,6 +257,8 @@ namespace NetAudioPlayer.ConsoleServer.Components.DAL
             {
                 command.CommandText = req.ToString();
 
+                var d = connection as IDbConnection;
+
                 connection.Open();
 
                 var exist = Convert.ToInt32(command.ExecuteScalar()) > 0;
