@@ -1,6 +1,6 @@
 ﻿// ReSharper disable InconsistentNaming
 
-namespace NetAudioPlayer.Core.Components.Common
+namespace Spartan.ServerCore.Components.Common
 {
 
     public enum Strings

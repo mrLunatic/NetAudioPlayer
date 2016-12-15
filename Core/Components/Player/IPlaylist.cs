@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using NetAudioPlayer.Core.Data;
-using NetAudioPlayer.Core.Model;
+using Spartan.Common.Data;
+using Spartan.Common.Model;
 
-namespace NetAudioPlayer.Core.Components.Player
+namespace Spartan.ServerCore.Components.Player
 {
     /// <summary>
     /// Плейлист
@@ -12,12 +12,12 @@ namespace NetAudioPlayer.Core.Components.Player
         /// <summary>
         /// Текущая композиция
         /// </summary>
-        Track Item { get; }
+        ITrack Item { get; }
 
         /// <summary>
         /// Список композиций
         /// </summary>
-        IEnumerable<Track> Items { get; }
+        IEnumerable<ITrack> Items { get; }
 
         /// <summary>
         /// Режим повторения
@@ -33,7 +33,7 @@ namespace NetAudioPlayer.Core.Components.Player
         /// Сбрасывает содержимое плейлиста и заполняет его согласно переданному списку
         /// </summary>
         /// <param name="items">Новые элементы для воспроизведения</param>
-        void Init(IEnumerable<Track> items);
+        void Init(IEnumerable<ITrack> items);
 
         /// <summary>
         /// Переходит к следующей композиции
@@ -44,7 +44,7 @@ namespace NetAudioPlayer.Core.Components.Player
         /// Начинает воспроизведение списка с указанного элемента
         /// </summary>
         /// <param name="track">Элемент, с которого следует начать воспроизведение списка</param>
-        void Play(Track track = null);
+        void Play(ITrack track = null);
 
         /// <summary>
         /// Переходит к предыдущей композиции

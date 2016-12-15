@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NetAudioPlayer.Core.Components.Common
+namespace Spartan.ServerCore.Components.Common
 {
     public interface ITimer
     {

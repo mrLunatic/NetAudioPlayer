@@ -5,9 +5,9 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using NetAudioPlayer.Core.Components.Communication;
+using Spartan.ServerCore.Components.Communication;
 
-namespace NetAudioPlayer.ConsoleServer.Components
+namespace Spartan.ServerNet45.Components
 {
     public sealed class TcpServer : CommunicationServerBase
     {

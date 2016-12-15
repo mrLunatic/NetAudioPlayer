@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using NetAudioPlayer.Core.Data;
-using NetAudioPlayer.Core.Model;
+using Spartan.Common.Data;
+using Spartan.Common.Model;
 
-namespace NetAudioPlayer.Core.Components.Player
+namespace Spartan.ServerCore.Components.Player
 {
     [DebuggerDisplay("{_items.Count} items. Current: {Item?.Name}")]
     public class Playlist : IPlaylist
@@ -24,9 +24,9 @@ namespace NetAudioPlayer.Core.Components.Player
 
         #region Properies
 
-        public IEnumerable<Track> Items => this._items.Select(p => p.Track);
+        public IEnumerable<ITrack> Items => this._items.Select(p => p.Track);
 
-        public Track Item => _item?.Track;
+        public ITrack Item => _item?.Track;
 
         private PlaylistItem ItemInternal
         {
@@ -54,7 +54,7 @@ namespace NetAudioPlayer.Core.Components.Player
 
         #region Public Methods
 
-        public void Init(IEnumerable<Track> items)
+        public void Init(IEnumerable<ITrack> items)
         {
             ItemInternal = null;
 
@@ -85,7 +85,7 @@ namespace NetAudioPlayer.Core.Components.Player
             Next();
         }
 
-        public void Play(Track track)
+        public void Play(ITrack track)
         {
             if (track != null)
             {

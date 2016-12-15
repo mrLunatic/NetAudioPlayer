@@ -1,7 +1,7 @@
 ﻿using System.IO;
-using NetAudioPlayer.Core.Components.Player;
+using Spartan.ServerCore.Components.Player;
 
-namespace NetAudioPlayer.ConsoleServer.Components
+namespace Spartan.ServerNet45.Components
 {
     internal class UniversalItemLoader : IItemLoader
     {

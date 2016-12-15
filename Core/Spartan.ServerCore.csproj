@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D4D3E4F7-12E9-46EA-9FEA-0CA0B8375378}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Spartan.ServerCore</RootNamespace>
+    <AssemblyName>Spartan.ServerCore</AssemblyName>
+    <DefaultLanguage>ru-RU</DefaultLanguage>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkProfile>Profile111</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Components\Communication\CommunicationServerBase.cs" />
+    <Compile Include="Components\DAL\RequestParameters\AlbumRequestParameters.cs" />
+    <Compile Include="Components\DAL\RequestParameters\PlaylistRequestParameters.cs" />
+    <Compile Include="Components\DAL\UpdateParameters\AlbumUpdateParameters.cs" />
+    <Compile Include="Components\DAL\RequestParameters\ArtistRequestParameters.cs" />
+    <Compile Include="Components\DAL\UpdateParameters\ArtistUpdateParameters.cs" />
+    <Compile Include="Components\DAL\RequestParameters\RequestParameters.cs" />
+    <Compile Include="Components\DAL\UpdateParameters\CommonUpdateParameters.cs" />
+    <Compile Include="Components\DAL\RequestParameters\GenreRequestParameters.cs" />
+    <Compile Include="Components\DAL\UpdateParameters\GenreUpdateParameters.cs" />
+    <Compile Include="Components\DAL\IDal.cs" />
+    <Compile Include="Components\DAL\RequestParameters\TrackRequestParameters.cs" />
+    <Compile Include="Components\DAL\UpdateParameters\PlaylistUpdateParameters.cs" />
+    <Compile Include="Components\DAL\UpdateParameters\TrackUpdateParameters.cs" />
+    <Compile Include="Components\Player\IAudioEngine.cs" />
+    <Compile Include="Components\Communication\ICommunicationServer.cs" />
+    <Compile Include="Components\Player\IItemLoader.cs" />
+    <Compile Include="Components\Common\ILocalizationService.cs" />
+    <Compile Include="Components\Player\IPlaylist.cs" />
+    <Compile Include="Components\Common\ITimer.cs" />
+    <Compile Include="Components\Player\Playlist.cs" />
+    <Compile Include="Components\Player\PlaylistItem.cs" />
+    <Compile Include="Components\Communication\RequestRecievedEventArgs.cs" />
+    <Compile Include="Components\ServiceLocator.cs" />
+    <Compile Include="Components\Player\State\IdleState.cs" />
+    <Compile Include="Components\Player\State\PauseState.cs" />
+    <Compile Include="Components\Player\State\PlayState.cs" />
+    <Compile Include="Components\Player\State\StateBase.cs" />
+    <Compile Include="Components\Player\State\States.cs" />
+    <Compile Include="Components\Player\State\StopState.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.2-beta1\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Spartan.Common.csproj">
+      <Project>{dc0baf44-b6bd-4dc9-bc58-e96a316d3701}</Project>
+      <Name>Spartan.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

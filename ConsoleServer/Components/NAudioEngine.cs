@@ -2,10 +2,11 @@
 using NAudio.CoreAudioApi;
 using NAudio.Utils;
 using NAudio.Wave;
-using NetAudioPlayer.Core.Components.Player;
-using NetAudioPlayer.Core.Data;
+using Spartan.Common.Data;
+using Spartan.ServerCore.Components.Player;
+using Spartan.ServerNet45.Data;
 
-namespace NetAudioPlayer.ConsoleServer.Components
+namespace Spartan.ServerNet45.Components
 {
     public sealed class NAudioEngine : IAudioEngine
     {
@@ -144,7 +145,7 @@ namespace NetAudioPlayer.ConsoleServer.Components
         /// Воспроизвести элемент
         /// </summary>
         /// <param name="track">Элемент для воспроизведения</param>
-        public void Play(Track track)
+        public void Play(ITrack track)
         {
             if (WaveOut != null && WaveOut.PlaybackState != PlaybackState.Stopped)
             {
@@ -163,8 +164,6 @@ namespace NetAudioPlayer.ConsoleServer.Components
                     SingleReaderObject = true,
                     RequestFloatOutput = true
                 });
-
-            track.Duration = Convert.ToInt32(Stream.TotalTime.TotalSeconds);
 
             WaveOut = new WasapiOut(AudioClientShareMode.Shared, 0);
             WaveOut.Init(Stream);

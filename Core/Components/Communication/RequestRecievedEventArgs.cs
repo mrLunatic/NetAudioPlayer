@@ -1,7 +1,7 @@
 using System;
-using NetAudioPlayer.Core.Message;
+using Spartan.Common.Message;
 
-namespace NetAudioPlayer.Core.Components.Communication
+namespace Spartan.ServerCore.Components.Communication
 {
     /// <summary>
     /// Данные события полученного запроса

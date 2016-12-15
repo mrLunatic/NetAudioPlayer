@@ -1,40 +1,31 @@
 ﻿using System.Collections.Generic;
-using NetAudioPlayer.Core.Data;
+using System.Diagnostics.Contracts;
+using Spartan.Common.Data;
+using Spartan.ServerCore.Components.DAL.RequestParameters;
+using Spartan.ServerCore.Components.DAL.UpdateParameters;
 
-namespace NetAudioPlayer.Core.Components.DAL
+namespace Spartan.ServerCore.Components.DAL
 {
     public interface IDal
     {
         #region Track
 
-        /// <summary>
-        /// Создает в базе новую композицию
-        /// </summary>
-        /// <param name="name">Название композиции</param>
-        /// <param name="artistId">Идентификатор исполнителя композиции</param>
-        /// <param name="albumId">Идентификатор альбома композиции</param>
-        /// <param name="albumNumber">Номер композиции в альбоме</param>
-        /// <param name="genreId">Идентификатор жанра</param>
-        /// <param name="duration">Длительность композиции (сек.)</param>
-        /// <param name="uri">Адрес композиции</param>
-        /// <param name="tag">Дополнительная метка</param>
-        /// <returns>идентификатор созданный композиции</returns>
-        int CreateTrack(string name, int artistId, int albumId, int albumNumber, int genreId, int duration, string uri, string tag);
-
+        int CreateTrack(string name, string artistName, string albumName, int albumNumber, string genreName, int duration, string uri);
+        
         /// <summary>
         /// Возвращает композицию с указанным идентификатором.
         /// <para>Null - если композиция не найдена</para>
         /// </summary>
         /// <param name="id">Идентификатор композиции</param>
         /// <returns></returns>
-        Track GetTrack(int id);
+        ITrack GetTrack(int id);
 
         /// <summary>
         /// Возвращает список композиций, соответствующих указанным параметрам
         /// </summary>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        IEnumerable<Track> GetTracks(TrackRequestParameters parameters);
+        IEnumerable<ITrack> GetTracks(TrackRequestParameters parameters);
 
         /// <summary>
         /// Обновляет указанные поля у композиции
@@ -61,21 +52,21 @@ namespace NetAudioPlayer.Core.Components.DAL
         /// <param name="name">имя исполнителя</param>
         /// <param name="tag">Дополнительная метка</param>
         /// <returns>Идентификатор созанного исполнителя</returns>
-        int CreateArtist(string name, string tag);
+        int CreateArtist(string name);
 
         /// <summary>
         /// Возвращает исполнителя с указанным идентификатором
         /// </summary>
         /// <param name="id">Идентификатор исполнителя</param>
         /// <returns>Исполнитель с указанным идентификатором</returns>
-        Artist GetArtist(int id);
+        IArtist GetArtist(int id);
 
         /// <summary>
         /// Возвращает список исполнителей, удовлетворяющих указанным параметрам
         /// </summary>
         /// <param name="parameters">Параметры поиска исполнителей</param>
         /// <returns>Список подходящих исполнителей</returns>
-        IEnumerable<Artist> GetArtists(ArtistRequestParameters parameters);
+        IEnumerable<IArtist> GetArtists(ArtistRequestParameters parameters);
 
         /// <summary>
         /// Обновляет исполнителя с указанным идентификатором
@@ -91,11 +82,11 @@ namespace NetAudioPlayer.Core.Components.DAL
 
         #region Album
 
-        int CreateAlbum(string name, int artistId, int year, string tag);
+        int CreateAlbum(string name, string artistName, string genreName, int year);
 
-        Album GetAlbum(int id);
+        IAlbum GetAlbum(int id);
 
-        IEnumerable<Album> GetAlbums(AlbumRequestParameters parameters);
+        IEnumerable<IAlbum> GetAlbums(AlbumRequestParameters parameters);
 
         bool UpdateAlbum(int id, AlbumUpdateParameters parameters);
 
@@ -103,13 +94,13 @@ namespace NetAudioPlayer.Core.Components.DAL
 
         #endregion
 
-        #region Genres
+        #region Genre
 
-        int CreateGenre(string name, string tag);
+        int CreateGenre(string name);
 
-        Genre GetGenre(int id);
+        IGenre GetGenre(int id);
 
-        IEnumerable<Genre> GetGenres(GenreRequestParameters parameters);
+        IEnumerable<IGenre> GetGenres(GenreRequestParameters parameters);
 
         bool UpdateGenre(int id, GenreUpdateParameters parameters);
 
@@ -117,5 +108,24 @@ namespace NetAudioPlayer.Core.Components.DAL
 
         #endregion
 
+        #region Playlist
+
+        int CreatePlaylist(string name);
+
+        IPlaylist GetPlaylist(int id);
+
+        IEnumerable<IPlaylist> GetPlaylists(PlaylistRequestParameters parameters);
+
+        bool UpdatePlaylist(int id, PlaylistUpdateParameters parameters);
+
+        bool DeletePlaylist(int id);
+
+        IEnumerable<int> GetPlaylistTrackIds(int id);
+
+        bool AddTrackToPlaylist(int id, int trackId);
+
+        bool RemoveTrackFromPlaylist(int id, int trackId);
+
+        #endregion   
     }
 }

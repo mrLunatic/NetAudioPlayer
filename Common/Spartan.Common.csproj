@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{DC0BAF44-B6BD-4DC9-BC58-E96A316D3701}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Spartan.Common</RootNamespace>
+    <AssemblyName>Spartan.Common</AssemblyName>
+    <DefaultLanguage>ru-RU</DefaultLanguage>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TargetFrameworkProfile>Profile111</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Attribute\MessageAttribute.cs" />
+    <Compile Include="Converters\TimeSpanConverter.cs" />
+    <Compile Include="Data\IAlbum.cs" />
+    <Compile Include="Data\IAlbumed.cs" />
+    <Compile Include="Data\IArtist.cs" />
+    <Compile Include="Data\DataContract.cs" />
+    <Compile Include="Data\IArtisted.cs" />
+    <Compile Include="Data\IGenre.cs" />
+    <Compile Include="Data\IGenred.cs" />
+    <Compile Include="Data\IItem.cs" />
+    <Compile Include="Data\IPlaylist.cs" />
+    <Compile Include="Data\ITrack.cs" />
+    <Compile Include="Data\ITrackStore.cs" />
+    <Compile Include="Message\IMessage.cs" />
+    <Compile Include="Message\MessageBase.cs" />
+    <Compile Include="Message\MessageParser.cs" />
+    <Compile Include="Message\NextMessage.cs" />
+    <Compile Include="Message\PauseMessage.cs" />
+    <Compile Include="Message\PlayMessage.cs" />
+    <Compile Include="Message\PrevMessage.cs" />
+    <Compile Include="Message\ResponseMessage.cs" />
+    <Compile Include="Message\SeekMessage.cs" />
+    <Compile Include="Message\ShortStatusInfoMessage.cs" />
+    <Compile Include="Message\StatusInfoMessage.cs" />
+    <Compile Include="Message\StatusMessage.cs" />
+    <Compile Include="Message\StopMessage.cs" />
+    <Compile Include="Message\SwitchOffMessage.cs" />
+    <Compile Include="Message\UnknownMessage.cs" />
+    <Compile Include="Model\Error.cs" />
+    <Compile Include="Model\ErrorCode.cs" />
+    <Compile Include="Model\PlayerState.cs" />
+    <Compile Include="Model\RepeatMode.cs" />
+    <Compile Include="Model\SortingItem.cs" />
+    <Compile Include="Model\Sorting\AlbumSorting.cs" />
+    <Compile Include="Model\Sorting\ArtistSorting.cs" />
+    <Compile Include="Model\Sorting\GenreSorting.cs" />
+    <Compile Include="Model\Sorting\PlaylistSorting.cs" />
+    <Compile Include="Model\Sorting\TrackSorting.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

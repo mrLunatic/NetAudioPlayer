@@ -1,18 +1,18 @@
 ﻿using System.Diagnostics;
-using NetAudioPlayer.Core.Data;
+using Spartan.Common.Data;
 
-namespace NetAudioPlayer.Core.Components.Player
+namespace Spartan.ServerCore.Components.Player
 {
     [DebuggerDisplay("{Track}. Played: {IsPlayed}")]
     public class PlaylistItem
     {
-        public Track Track { get; }
+        public ITrack Track { get; }
 
         public int? HistoryIndex { get; set; }
 
         public bool IsPlayed => HistoryIndex.HasValue;        
 
-        public PlaylistItem(Track track)
+        public PlaylistItem(ITrack track)
         {
             Track = track;
         }

@@ -1,6 +1,6 @@
-﻿using NetAudioPlayer.Core.Components.Common;
+﻿using Spartan.ServerCore.Components.Common;
 
-namespace NetAudioPlayer.ConsoleServer.Components
+namespace Spartan.ServerNet45.Components
 {
     public sealed class LocalizationService : ILocalizationService
     {

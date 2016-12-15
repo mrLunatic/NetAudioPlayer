@@ -1,7 +1,7 @@
 ﻿using System;
-using NetAudioPlayer.Core.Data;
+using Spartan.Common.Data;
 
-namespace NetAudioPlayer.Core.Components.Player
+namespace Spartan.ServerCore.Components.Player
 {
     /// <summary>
     /// Компонент, отвечающий за работу с аудио
@@ -42,7 +42,7 @@ namespace NetAudioPlayer.Core.Components.Player
         /// Воспроизвести элемент
         /// </summary>
         /// <param name="track">Элемент для воспроизведения</param>
-        void Play(Track track);
+        void Play(ITrack track);
 
         /// <summary>
         /// Приостановить воспроизведение

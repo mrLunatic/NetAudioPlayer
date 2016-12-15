@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace NetAudioPlayer.Core.Components.Player
+namespace Spartan.ServerCore.Components.Player
 {
     /// <summary>
     /// Загрузчик файлов

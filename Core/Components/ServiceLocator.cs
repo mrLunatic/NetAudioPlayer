@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NetAudioPlayer.Core.Components
+namespace Spartan.ServerCore.Components
 {
     public interface IServiceLocator : IDisposable
     {
