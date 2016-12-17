@@ -1,13 +1,28 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.PerformanceData;
 using Spartan.Common.Data;
 
 namespace Spartan.ServerNet45.Data
 {
+    [DebuggerDisplay("Album {Id}: {Name}")]
     internal class Album : IAlbum
     {
         #region Constants
 
         public const string Table = @"album";
+
+        public static readonly string InsertTrigger = $@"{Table}_after_insert_trigger";
+
+        public static readonly string UpdateTrigger = $@"{Table}_after_update_trigger";
+
+        public static readonly string DeleteTrigger = $@"{Table}_after_delete_trigger";
+
+        public static readonly string NameIndex = $@"{Table}_{NameColumn}_index";
+
+        public static readonly string ArtistIdIndex = $@"{Table}_{ArtistIdColumn}_index";
+
+        public static readonly string GenreIdIndex = $@"{Table}_{GenreIdColumn}_index";
 
         public const string IdColumn = @"id";
 

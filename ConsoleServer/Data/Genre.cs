@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using Spartan.Common.Data;
 
 namespace Spartan.ServerNet45.Data
 {
+    [DebuggerDisplay("Genre {Id}: {Name}")]
     /// <summary>
     /// Жанр
     /// </summary>
@@ -19,6 +21,8 @@ namespace Spartan.ServerNet45.Data
         public const string TagColumn = @"tag";
 
         public const string Table = @"genre";
+
+        public static readonly string NameIndex = $@"{Table}_name_index";
 
         public const int DefaultRating = 0;
 

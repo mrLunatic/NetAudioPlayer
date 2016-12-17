@@ -38,6 +38,7 @@ namespace NetAudioPlayer.ConsoleServer
             var artists = db.GetArtists(new ArtistRequestParameters());
             var albums = db.GetAlbums(new AlbumRequestParameters());
             var genres = db.GetGenres(new GenreRequestParameters());
+            var tracks = db.GetTracks(new TrackRequestParameters());
 
 
 

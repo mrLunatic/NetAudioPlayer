@@ -159,10 +159,10 @@ namespace Spartan.ServerNet45.Components.DAL
             if (p.Ids != null)
                 where.Add($@"{Alb}.{Album.IdColumn} IN ({string.Join(",", p.Ids)})");
 
-            if (!string.IsNullOrEmpty(p.Name))
-                where.Add($@"{Alb}.{Album.NameColumn} LIKE '%{p.Name}%'");
+            if (!string.IsNullOrWhiteSpace(p.Name))
+                where.Add($@"{Alb}.{Album.NameColumn} LIKE '{p.Name}%'");
 
-            if (!string.IsNullOrEmpty(p.Tag))
+            if (!string.IsNullOrWhiteSpace(p.Tag))
                 where.Add($@"{Alb}.{Album.TagColumn} LIKE '%{p.Tag}%'");
 
             if (p.RatingMin.HasValue)
@@ -177,8 +177,8 @@ namespace Spartan.ServerNet45.Components.DAL
             if (p.ArtistId.HasValue)
                 where.Add($@"{Art}.{Artist.IdColumn} = {p.ArtistId}");
 
-            if (string.IsNullOrEmpty(p.ArtistName))
-                where.Add($@"{Art}.{Artist.NameColumn} LIKE %{p.ArtistName}%");
+            if (string.IsNullOrWhiteSpace(p.ArtistName))
+                where.Add($@"{Art}.{Artist.NameColumn} LIKE '{p.ArtistName}%'");
 
             if (p.YearMin.HasValue)
                 where.Add($@"{Alb}.{Album.YearColumn} >= {p.YearMin}");
@@ -199,10 +199,10 @@ namespace Spartan.ServerNet45.Components.DAL
             if (p.Ids != null)
                 where.Add($@"{Art}.{Artist.IdColumn} IN ({string.Join(",", p.Ids)})");
 
-            if (!string.IsNullOrEmpty(p.Name))
+            if (!string.IsNullOrWhiteSpace(p.Name))
                 where.Add($@"{Art}.{Artist.NameColumn} LIKE '%{p.Name}%'");
 
-            if (!string.IsNullOrEmpty(p.Tag))
+            if (!string.IsNullOrWhiteSpace(p.Tag))
                 where.Add($@"{Art}.{Artist.TagColumn} LIKE '%{p.Tag}%'");
 
             if (p.RatingMin.HasValue)
@@ -224,10 +224,10 @@ namespace Spartan.ServerNet45.Components.DAL
             if (p.Ids != null)
                 where.Add($@"{Gen}.{Genre.IdColumn} IN ({string.Join(",", p.Ids)})");
 
-            if (!string.IsNullOrEmpty(p.Name))
-                where.Add($@"{Gen}.{Genre.NameColumn} LIKE '%{p.Name}%'");
+            if (!string.IsNullOrWhiteSpace(p.Name))
+                where.Add($@"{Gen}.{Genre.NameColumn} LIKE '{p.Name}%'");
 
-            if (!string.IsNullOrEmpty(p.Tag))
+            if (!string.IsNullOrWhiteSpace(p.Tag))
                 where.Add($@"{Gen}.{Genre.TagColumn} LIKE '%{p.Tag}%'");
 
             if (p.RatingMin.HasValue)
@@ -249,10 +249,10 @@ namespace Spartan.ServerNet45.Components.DAL
             if (p.Ids != null)
                 where.Add($@"{Plt}.{Playlist.IdColumn} IN ({string.Join(",", p.Ids)})");
 
-            if (!string.IsNullOrEmpty(p.Name))
-                where.Add($@"{Plt}.{Playlist.NameColumn} LIKE '%{p.Name}%'");
+            if (!string.IsNullOrWhiteSpace(p.Name))
+                where.Add($@"{Plt}.{Playlist.NameColumn} LIKE '{p.Name}%'");
 
-            if (!string.IsNullOrEmpty(p.Tag))
+            if (!string.IsNullOrWhiteSpace(p.Tag))
                 where.Add($@"{Plt}.{Playlist.TagColumn} LIKE '%{p.Tag}%'");
 
             if (p.RatingMin.HasValue)
@@ -274,10 +274,10 @@ namespace Spartan.ServerNet45.Components.DAL
             if (p.Ids != null)
                 where.Add($@"{Trk}.{Track.IdColumn} IN ({string.Join(",", p.Ids)})");
 
-            if (!string.IsNullOrEmpty(p.Name))
-                where.Add($@"{Trk}.{Track.NameColumn} LIKE '%{p.Name}%'");
+            if (!string.IsNullOrWhiteSpace(p.Name))
+                where.Add($@"{Trk}.{Track.NameColumn} LIKE '{p.Name}%'");
 
-            if (!string.IsNullOrEmpty(p.Tag))
+            if (!string.IsNullOrWhiteSpace(p.Tag))
                 where.Add($@"{Trk}.{Track.TagColumn} LIKE '%{p.Tag}%'");
 
             if (p.RatingMin.HasValue)
@@ -292,14 +292,14 @@ namespace Spartan.ServerNet45.Components.DAL
             if (p.ArtistId.HasValue)
                 where.Add($@"{Art}.{Artist.IdColumn} = {p.ArtistId.Value}");
 
-            if (!string.IsNullOrEmpty(p.ArtistName))
-                where.Add($@"{Art}.{Artist.NameColumn} LIKE %{p.ArtistName}%");
+            if (!string.IsNullOrWhiteSpace(p.ArtistName))
+                where.Add($@"{Art}.{Artist.NameColumn} LIKE '{p.ArtistName}%'");
 
             if (p.AlbumId.HasValue)
                 where.Add($@"{Alb}.{Album.IdColumn} = {p.AlbumId.Value}");
 
-            if (string.IsNullOrEmpty(p.AlbumName))
-                where.Add($@"{Alb}.{Album.NameColumn} LIKE %{p.AlbumName}%");
+            if (string.IsNullOrWhiteSpace(p.AlbumName))
+                where.Add($@"{Alb}.{Album.NameColumn} LIKE '{p.AlbumName}%'");
 
             if (p.AlbumNumber.HasValue)
                 where.Add($@"{Trk}.{Track.AlbumNumberColumn} = {p.AlbumNumber.Value}");
@@ -307,11 +307,11 @@ namespace Spartan.ServerNet45.Components.DAL
             if (p.GenreId.HasValue)
                 where.Add($@"{Gen}.{Genre.IdColumn} = {p.GenreId}");
 
-            if (string.IsNullOrEmpty(p.GenreName))
-                where.Add($@"{Gen}.{Genre.NameColumn} LIKE %{p.GenreName}%");
+            if (string.IsNullOrWhiteSpace(p.GenreName))
+                where.Add($@"{Gen}.{Genre.NameColumn} LIKE '{p.GenreName}%'");
 
-            if (string.IsNullOrEmpty(p.Uri))
-                where.Add($@"{Trk}.{Track.UriColumn} LIKE %{p.Uri}%");
+            if (string.IsNullOrWhiteSpace(p.Uri))
+                where.Add($@"{Trk}.{Track.UriColumn} LIKE '{p.Uri}%'");
 
             return where.Any() ? where.ToJoinString(" AND ") : null;
         }

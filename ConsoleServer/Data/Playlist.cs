@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net.Http.Formatting;
 using Spartan.Common.Data;
 
 namespace Spartan.ServerNet45.Data
 {
+    [DebuggerDisplay("Playlist {Id}: {Name}")]
     internal class Playlist : IPlaylist
     {
         #region Constants
@@ -17,6 +19,8 @@ namespace Spartan.ServerNet45.Data
         public const string TagColumn = @"tag";
 
         public const string Table = @"playlist";
+
+        public static readonly string NameIndex = $@"{Table}_{NameColumn}_index";
 
         public const string TracksCountColumn = @"tracks_count";
 

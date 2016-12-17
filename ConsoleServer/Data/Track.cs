@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using Spartan.Common.Data;
 
 namespace Spartan.ServerNet45.Data
 {
+    [DebuggerDisplay("Track {Id}: {Name} ({Uri})")]
     /// <summary>
     /// Композиция
     /// </summary>
@@ -11,6 +13,22 @@ namespace Spartan.ServerNet45.Data
         #region Constants
 
         public const string Table = @"track";
+
+        public static readonly string InsertTrigger = $@"{Table}_insert_trigger";
+
+        public static readonly string UpdateArtistIdTrigger = $@"{Table}_{ArtistIdColumn}_update_trigger";
+
+        public static readonly string UpdateAlbumIdTrigger = $@"{Table}_{AlbumIdColumn}_update_trigger";
+
+        public static readonly string DeleteTrigger = $@"{Table}_delete_trigger";
+
+        public static readonly string NameIndex = $@"{Table}_{NameColumn}_index";
+
+        public static readonly string ArtistIdIndex = $@"{Table}_{ArtistIdColumn}_index";
+
+        public static readonly string AlbumIdIndex = $@"{Table}_{AlbumIdColumn}_index";
+
+        public static readonly string GenreIdIndex = $@"{Table}_{GenreIdColumn}_index";
 
         public const string IdColumn = @"id";
 

@@ -6,26 +6,6 @@ namespace Spartan.ServerNet45.Components.DAL
 {
     public partial class SqliteDal
     {
-
-        private static readonly string AlbumInsertTrigger = $@"{Album.Table}_insert_trigger";
-
-        private static readonly string AlbumUpdateTrigger = $@"{Album.Table}_update_trigger";
-
-        private static readonly string AlbumDeleteTrigger = $@"{Album.Table}_delete_trigger";
-
-        private static readonly string TrackInsertTrigger = $@"{Track.Table}_insert_trigger";
-
-        private static readonly string TrackUpdateTrigger = $@"{Track.Table}_update_trigger";
-
-        private static readonly string TrackDeleteTrigger = $@"{Track.Table}_delete_trigger";
-
-        private static readonly string PlaylistMapInsertTrigger = $@"{PlaylistMap.Table}_insert_trigger";
-
-        private static readonly string PlaylistMapUpdateTrigger = $@"{PlaylistMap.Table}_update_trigger";
-
-        private static readonly string PlaylistMapDeleteTrigger = $@"{PlaylistMap.Table}_delete_trigger";
-
-
         private void CreateDb()
         {
             CreateGenreTable();
@@ -47,7 +27,11 @@ CREATE TABLE [{Genre.Table}]
   [{Genre.TagColumn   }]  TEXT     NOT NULL  DEFAULT {Genre.DefaultTag.AsSqlString()},
 
   PRIMARY KEY ([{Genre.IdColumn}])
-);";
+);
+
+CREATE INDEX [{Genre.NameIndex}]
+  ON [{Genre.Table}]
+  ([{Genre.NameColumn}]);";
 
             ExecuteScalar(cmd);
         }
@@ -64,7 +48,11 @@ CREATE TABLE [{Artist.Table}]
   [{Artist.AlbumsCountColumn}]  INTEGER  NOT NULL DEFAULT 0,
   [{Artist.TracksCountColumn}]  INTEGER  NOT NULL DEFAULT 0,
 
-  PRIMARY KEY  ([{Artist.IdColumn}]));";
+  PRIMARY KEY ([{Artist.IdColumn}]));
+
+CREATE INDEX [{Artist.NameIndex}]
+  ON [{Artist.Table}]
+  ([{Artist.NameColumn}]);";
 
             ExecuteScalar(cmd);
         }
@@ -94,32 +82,46 @@ CREATE TABLE [{Album.Table}] (
     REFERENCES [{Genre.Table }]([{Genre.IdColumn }])
     ON DELETE SET DEFAULT);
 
-CREATE TRIGGER [{AlbumInsertTrigger}] 
-  AFTER INSERT ON [{Album.Table}]
+CREATE INDEX [{Album.NameIndex}]
+  ON [{Album.Table}]
+  ([{Album.NameColumn}]);
+
+CREATE INDEX [{Album.ArtistIdIndex}]
+  ON [{Album.Table}]
+  ([{Album.ArtistIdColumn}]);
+
+CREATE INDEX [{Album.GenreIdIndex}]
+  ON [{Album.Table}]
+  ([{Album.GenreIdColumn}]);
+
+CREATE TRIGGER [{Album.InsertTrigger}]
+  AFTER INSERT
+  ON [{Album.Table}]
 BEGIN
-  UPDATE {Artist.Table} 
-    SET {Artist.AlbumsCountColumn} = {Artist.AlbumsCountColumn} + 1
-    WHERE {Artist.IdColumn} = {New}.{Album.ArtistIdColumn};
+  UPDATE [{Artist.Table}] 
+    SET [{Artist.AlbumsCountColumn}] = [{Artist.AlbumsCountColumn}] + 1
+    WHERE [{Artist.IdColumn}] = {New}.[{Album.ArtistIdColumn}];
 END;
 
-CREATE TRIGGER [{AlbumUpdateTrigger}] 
-  AFTER UPDATE ON [{Album.Table}]
-  WHEN {New}.{Album.ArtistIdColumn} != {Old}.{Album.ArtistIdColumn}
+CREATE TRIGGER [{Album.UpdateTrigger}]
+  AFTER UPDATE OF [{Album.ArtistIdColumn}]
+  ON [{Album.Table}]
 BEGIN 
-  UPDATE {Artist.Table}
-    SET {Artist.AlbumsCountColumn} = {Artist.AlbumsCountColumn} + 1
-    WHERE {Artist.IdColumn} = {New}.{Album.ArtistIdColumn};
-  UPDATE {Artist.Table}
-    SET {Artist.AlbumsCountColumn} = {Artist.AlbumsCountColumn} - 1
-    WHERE {Artist.IdColumn} = {Old}.{Album.ArtistIdColumn};
+  UPDATE [{Artist.Table}]
+    SET [{Artist.AlbumsCountColumn}] = [{Artist.AlbumsCountColumn}] + 1
+    WHERE [{Artist.IdColumn}] = {New}.[{Album.ArtistIdColumn}];
+  UPDATE [{Artist.Table}]
+    SET [{Artist.AlbumsCountColumn}] = [{Artist.AlbumsCountColumn}] - 1
+    WHERE [{Artist.IdColumn}] = {Old}.[{Album.ArtistIdColumn}];
 END;
 
-CREATE TRIGGER [{AlbumDeleteTrigger}]
-  AFTER DELETE ON [{Album.Table}]
+CREATE TRIGGER [{Album.DeleteTrigger}]
+  AFTER DELETE
+  ON [{Album.Table}]
 BEGIN
-  UPDATE {Artist.Table} 
-    SET {Artist.AlbumsCountColumn} = {Artist.AlbumsCountColumn} - 1
-    WHERE {Artist.IdColumn} = {Old}.{Album.ArtistIdColumn};
+  UPDATE [{Artist.Table}] 
+    SET [{Artist.AlbumsCountColumn}] = [{Artist.AlbumsCountColumn}] - 1
+    WHERE [{Artist.IdColumn}] = {Old}.[{Album.ArtistIdColumn}];
 END;";
 
             ExecuteScalar(cmd);
@@ -154,45 +156,68 @@ CREATE TABLE [{Track.Table}] (
     REFERENCES [{Genre.Table}]([{Genre.IdColumn}])
     ON DELETE SET DEFAULT);
 
-CREATE TRIGGER [{TrackInsertTrigger}]
-  AFTER INSERT ON [{Track.Table}]
+CREATE INDEX [{Track.NameIndex}]
+  ON [{Track.Table}]
+  ([{Track.NameColumn}]);
+
+CREATE INDEX [{Track.ArtistIdIndex}]
+  ON [{Track.Table}]
+  ([{Track.ArtistIdColumn}]);
+
+CREATE INDEX [{Track.AlbumIdIndex}]
+  ON [{Track.Table}]
+  ([{Track.AlbumIdColumn}]);
+
+CREATE INDEX [{Track.GenreIdIndex}]
+  ON [{Track.Table}]
+  ([{Track.GenreIdColumn}]);
+
+CREATE TRIGGER [{Track.InsertTrigger}]
+  AFTER INSERT
+  ON [{Track.Table}]
 BEGIN
-  UPDATE {Artist.Table} 
-    SET {Artist.TracksCountColumn} = {Artist.TracksCountColumn} + 1
-    WHERE {Artist.IdColumn} = {New}.{Track.IdColumn};
-  UPDATE {Album.Table} 
-    SET {Album.TracksCountColumn } = {Album.TracksCountColumn } + 1 
-    WHERE {Album.IdColumn } = {New}.{Track.AlbumIdColumn};
+  UPDATE [{Artist.Table}] 
+    SET [{Artist.TracksCountColumn}] = [{Artist.TracksCountColumn}] + 1
+    WHERE [{Artist.IdColumn}] = {New}.[{Track.IdColumn}];
+  UPDATE [{Album.Table}] 
+    SET [{Album.TracksCountColumn}] = [{Album.TracksCountColumn}] + 1 
+    WHERE [{Album.IdColumn}] = {New}.[{Track.AlbumIdColumn}];
 END;
 
-CREATE TRIGGER [{TrackUpdateTrigger}] 
-  AFTER UPDATE ON [{Track.Table}]
-  WHEN {New}.{Track.ArtistIdColumn} != {Old}.{Track.ArtistIdColumn} 
-  OR {New}.{Track.AlbumNumberColumn} != {Old}.{Track.AlbumIdColumn}
+CREATE TRIGGER [{Track.UpdateArtistIdTrigger}] 
+  AFTER UPDATE OF [{Track.ArtistIdColumn}]
+  ON [{Track.Table}]
 BEGIN
-  UPDATE {Artist.Table} 
-    SET {Artist.TracksCountColumn} = {Artist.TracksCountColumn} + 1
-    WHERE {Artist.IdColumn} = {New}.{Track.ArtistIdColumn};
-  UPDATE {Artist.Table}
-    SET {Artist.TracksCountColumn} = {Artist.TracksCountColumn} - 1
-    WHERE {Artist.IdColumn} = {Old}.{Track.ArtistIdColumn};
-  UPDATE {Album.Table}
-    SET {Album.TracksCountColumn} = {Album.TracksCountColumn} + 1
-    WHERE {Album.IdColumn} = {New}.{Track.AlbumIdColumn};
-  UPDATE {Album.Table}
-    SET {Album.TracksCountColumn} = {Album.TracksCountColumn} - 1
-    WHERE {Album.IdColumn} = {Old}.{Track.AlbumIdColumn};
+  UPDATE [{Artist.Table}] 
+    SET [{Artist.TracksCountColumn}] = [{Artist.TracksCountColumn}] + 1
+    WHERE [{Artist.IdColumn}] = {New}.[{Track.ArtistIdColumn}];
+  UPDATE [{Artist.Table}]
+    SET [{Artist.TracksCountColumn}] = [{Artist.TracksCountColumn}] - 1
+    WHERE [{Artist.IdColumn}] = {Old}.[{Track.ArtistIdColumn}];
 END;
 
-CREATE TRIGGER [{TrackDeleteTrigger}]
-  AFTER DELETE ON [{Track.Table}] 
+CREATE TRIGGER [{Track.UpdateAlbumIdTrigger}] 
+  AFTER UPDATE OF [{Track.AlbumIdColumn}]
+  ON [{Track.Table}]
 BEGIN
-  UPDATE {Artist.Table} 
-    SET {Artist.TracksCountColumn} = {Artist.TracksCountColumn} - 1 
-    WHERE {Artist.IdColumn} = {Old}.{Track.ArtistIdColumn};
-  UPDATE {Album.Table} 
-    SET {Album.TracksCountColumn } = {Album.TracksCountColumn } - 1 
-    WHERE {Album.IdColumn } = {Old}.{Track.AlbumIdColumn};
+  UPDATE [{Album.Table}]
+    SET [{Album.TracksCountColumn}] = [{Album.TracksCountColumn}] + 1
+    WHERE [{Album.IdColumn}] = {New}.[{Track.AlbumIdColumn}];
+  UPDATE [{Album.Table}]
+    SET [{Album.TracksCountColumn}] = [{Album.TracksCountColumn}] - 1
+    WHERE [{Album.IdColumn}] = {Old}.[{Track.AlbumIdColumn}];
+END;
+
+CREATE TRIGGER [{Track.DeleteTrigger}]
+  AFTER DELETE
+  ON [{Track.Table}] 
+BEGIN
+  UPDATE [{Artist.Table}] 
+    SET [{Artist.TracksCountColumn}] = [{Artist.TracksCountColumn}] - 1 
+    WHERE [{Artist.IdColumn}] = {Old}.[{Track.ArtistIdColumn}];
+  UPDATE [{Album.Table}] 
+    SET [{Album.TracksCountColumn}] = [{Album.TracksCountColumn}] - 1 
+    WHERE [{Album.IdColumn}] = {Old}.[{Track.AlbumIdColumn}];
 END;";
 
             ExecuteScalar(cmd);
@@ -212,6 +237,10 @@ CREATE TABLE [{Playlist.Table}]
   PRIMARY KEY ([{Playlist.IdColumn}])
 );
 
+CREATE INDEX [{Playlist.NameIndex}]
+  ON [{Playlist.Table}]
+  ([{Playlist.NameColumn}]);
+
 CREATE TABLE [{PlaylistMap.Table}]
 (
   [{PlaylistMap.IdColumn}] INTEGER NOT NULL UNIQUE,
@@ -219,39 +248,50 @@ CREATE TABLE [{PlaylistMap.Table}]
   [{PlaylistMap.TrackIdColumn}] INTEGER NOT NULL,
 
   PRIMARY KEY ([{PlaylistMap.IdColumn}]),
+
   UNIQUE ([{PlaylistMap.PlaylistIdColumn}], [{PlaylistMap.TrackIdColumn}]),
+
   FOREIGN KEY ([{PlaylistMap.PlaylistIdColumn}])
     REFERENCES [{Playlist.Table}]([{Playlist.IdColumn}])
     ON DELETE CASCADE,
+
   FOREIGN KEY ([{PlaylistMap.TrackIdColumn}])
     REFERENCES [{Track.Table}]([{Track.IdColumn}])
     ON DELETE CASCADE
 );
 
-CREATE TRIGGER [{PlaylistMapInsertTrigger}] AFTER INSERT ON [{PlaylistMap.Table}]
+CREATE INDEX [{PlaylistMap.PlaylistIdIndex}]
+  ON [{PlaylistMap.Table}]
+  ([{PlaylistMap.PlaylistIdColumn}]);
+
+CREATE TRIGGER [{PlaylistMap.InsertTrigger}]
+  AFTER INSERT
+  ON [{PlaylistMap.Table}]
 BEGIN
   UPDATE [{Playlist.Table}]
     SET {Playlist.TracksCountColumn} = {Playlist.TracksCountColumn} + 1
     WHERE {Playlist.IdColumn} = {New}.{PlaylistMap.PlaylistIdColumn};
 END;
 
-CREATE TRIGGER [{PlaylistMapUpdateTrigger}]
-  AFTER UPDATE ON [{PlaylistMap.Table}]
-  WHEN {New}.{PlaylistMap.PlaylistIdColumn} != {Old}.{PlaylistMap.PlaylistIdColumn}
+CREATE TRIGGER [{PlaylistMap.UpdatePlaylistIdTrigger}]
+  AFTER UPDATE OF [{PlaylistMap.PlaylistIdColumn}]
+  ON [{PlaylistMap.Table}]
 BEGIN
   UPDATE [{Playlist.Table}]
-    SET {Playlist.TracksCountColumn} = {Playlist.TracksCountColumn} + 1
-    WHERE {Playlist.IdColumn} = {New}.{PlaylistMap.PlaylistIdColumn};
+    SET [{Playlist.TracksCountColumn}] = [{Playlist.TracksCountColumn}] + 1
+    WHERE [{Playlist.IdColumn}] = {New}.[{PlaylistMap.PlaylistIdColumn}];
   UPDATE [{Playlist.Table}]
-    SET {Playlist.TracksCountColumn} = {Playlist.TracksCountColumn} - 1
-    WHERE {Playlist.IdColumn} = {Old}.{PlaylistMap.PlaylistIdColumn};
+    SET [{Playlist.TracksCountColumn}] = [{Playlist.TracksCountColumn}] - 1
+    WHERE [{Playlist.IdColumn}] = {Old}.[{PlaylistMap.PlaylistIdColumn}];
 END;
 
-CREATE TRIGGER [{PlaylistMapDeleteTrigger}] AFTER DELETE ON [{PlaylistMap.Table}]
+CREATE TRIGGER [{PlaylistMap.DeleteTrigger}]
+  AFTER DELETE
+  ON [{PlaylistMap.Table}]
 BEGIN
   UPDATE [{Playlist.Table}]
-    SET {Playlist.TracksCountColumn} = {Playlist.TracksCountColumn} - 1
-    WHERE {Playlist.IdColumn} = {Old}.{PlaylistMap.PlaylistIdColumn};
+    SET [{Playlist.TracksCountColumn}] = [{Playlist.TracksCountColumn}] - 1
+    WHERE [{Playlist.IdColumn}] = {Old}.[{PlaylistMap.PlaylistIdColumn}];
 END;";
 
             ExecuteScalar(cmd);
