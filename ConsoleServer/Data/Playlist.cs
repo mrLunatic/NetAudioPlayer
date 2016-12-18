@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Net.Http.Formatting;
 using Spartan.Common.Data;
 
 namespace Spartan.ServerNet45.Data
